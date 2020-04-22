@@ -1,0 +1,39 @@
+<configuration>
+
+    <appender name="APPLICATION" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[LOG_START] [LOG_TYPE=APP] %date{ISO8601} [%thread] %-5level\(%class{0}: %L\) - %msg %ex{full}[LOG_END]%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="AUDIT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[LOG_START] [LOG_TYPE=AUDIT] %date{ISO8601} [%thread] %-5level\(%class{0}: %L\) - %msg %ex{full}[LOG_END]%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ACCESS" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[LOG_START] [LOG_TYPE=ACCESS] %msg [LOG_END]%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="APPLICATION"/>
+    </root>
+
+    <logger name="net.sf.jmimemagic" level="WARN"/>
+
+    <logger name="APPLICATION" level="INFO" additivity="false">
+        <appender-ref ref="APPLICATION"/>
+    </logger>
+
+    <logger name="AUDIT" level="INFO" additivity="false">
+        <appender-ref ref="AUDIT"/>
+    </logger>
+
+    <logger name="ACCESS" level="INFO" additivity="false">
+        <appender-ref ref="ACCESS"/>
+    </logger>
+
+</configuration>
