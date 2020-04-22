@@ -1,0 +1,25 @@
+- Create Yatspec test 
+- Use givens builder
+- User captured inputs and outputs
+- Sequence diagrams
+- interesting givens
+- assert on captured inputs and outputs
+-  assert on request and response
+- assert on internal request to thirdparty
+- assert on logs
+- assert on what is in the database
+- assertj
+- wiremock and/or jzonbie
+- show wiremock primings
+- log request and response, for entry and internal
+- log database contents
+- log file contents
+- log folder contents
+- log all the logs
+- log jms or objects calls
+- Dsl for fluent assertions, whens and givens
+- Notes
+- linking notes
+- dictionary
+- java 11 version
+- junit 5
