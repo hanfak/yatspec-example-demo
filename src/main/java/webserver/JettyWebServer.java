@@ -1,3 +1,5 @@
+package webserver;
+
 import org.eclipse.jetty.server.CustomRequestLog;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -39,7 +41,7 @@ public class JettyWebServer {
         }
     }
 
-    JettyWebServer withHandler(Handler handler) {
+    public JettyWebServer withHandler(Handler handler) {
         server.setHandler(handler);
         return this;
     }

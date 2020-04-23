@@ -1,3 +1,4 @@
+import logging.LoggingCategory;
 import org.eclipse.jetty.server.CustomRequestLog;
 import org.eclipse.jetty.server.Slf4jRequestLogWriter;
 import org.eclipse.jetty.servlet.FilterHolder;
@@ -7,6 +8,12 @@ import org.slf4j.Logger;
 import org.zalando.logbook.DefaultHttpLogWriter;
 import org.zalando.logbook.Logbook;
 import org.zalando.logbook.servlet.LogbookFilter;
+import starwarsservice.HttpLoggingFormatter;
+import starwarsservice.LoggingHttpClient;
+import starwarsservice.StarWarsService;
+import starwarsservice.UnirestHttpClient;
+import webserver.JettyWebServer;
+import webserver.UseCaseServlet;
 
 import java.util.EnumSet;
 
@@ -15,7 +22,6 @@ import static javax.servlet.DispatcherType.ERROR;
 import static javax.servlet.DispatcherType.REQUEST;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.zalando.logbook.Conditions.exclude;
-import static org.zalando.logbook.Conditions.requestTo;
 import static org.zalando.logbook.DefaultHttpLogWriter.Level.INFO;
 
 public class Application {
@@ -26,7 +32,7 @@ public class Application {
     ServletContextHandler servletContextHandler = new ServletContextHandler();
     addLoggingFilter(servletContextHandler);
     jettyWebServer.withRequestLog(createRequestLog());
-    servletContextHandler.addServlet(new ServletHolder(new UseCaseServlet()), "/usecase");
+    servletContextHandler.addServlet(new ServletHolder(new UseCaseServlet(new StarWarsService(new LoggingHttpClient(new UnirestHttpClient(), new HttpLoggingFormatter())))), "/usecase/*");
     jettyWebServer.withHandler(servletContextHandler);
     jettyWebServer.startServer();
   }
@@ -35,7 +41,6 @@ public class Application {
 
   public static void addLoggingFilter(ServletContextHandler servletContextHandler) {
     Logbook logbook = Logbook.builder()
-            .condition(exclude(requestTo("/ready")))
             .writer(new DefaultHttpLogWriter(getLogger(LoggingCategory.AUDIT.name()), INFO))
             .build();
     FilterHolder filterHolder = new FilterHolder(new LogbookFilter(logbook));
