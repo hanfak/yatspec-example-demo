@@ -11,3 +11,8 @@ psql -h localhost -U postgres -d postgres
  \dt
  -- show schema
  \d+ <name of table>
+ 
+ 
+********
+ Access: 
+ http://localhost:2222/usecase/Luke%20Skywalker

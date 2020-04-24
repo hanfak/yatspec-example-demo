@@ -23,15 +23,16 @@ INSERT INTO records.characters (PERSON_ID, PERSON_NAME) VALUES ('22', 'Boba Fett
 
 CREATE TABLE records.characterInfo(
    ID                   integer       DEFAULT nextval('characterInfo_sequence'::regclass) NOT NULL UNIQUE,
-   CHARACTER_INFO_ID    integer       NOT NULL UNIQUE PRIMARY KEY,
+   CHARACTER_INFO_ID    integer       DEFAULT currval('characterInfo_sequence'::regclass) NOT NULL UNIQUE PRIMARY KEY,
    PERSON_ID            integer       REFERENCES records.characters(PERSON_ID),
+   PERSON_NAME          varchar(50)   NOT NULL,
    BIRTH_YEAR           varchar(50)   NOT NULL,
    CREATED_AT           TIMESTAMP     DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE records.specifiesInfo(
    ID             integer       DEFAULT nextval('specifiesInfo_sequence'::regclass) NOT NULL UNIQUE,
-   SPECIES_ID     integer       NOT NULL UNIQUE PRIMARY KEY,
+   SPECIES_ID     integer       DEFAULT currval('specifiesInfo_sequence'::regclass) NOT NULL UNIQUE PRIMARY KEY,
    PERSON_ID      integer       REFERENCES records.characters(PERSON_ID),
    SPECIES        varchar(50)   NOT NULL,
    LIFESPAN       integer       NOT NULL,

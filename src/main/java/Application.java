@@ -1,3 +1,4 @@
+import databaseservice.DataProvider;
 import logging.LoggingCategory;
 import org.eclipse.jetty.server.CustomRequestLog;
 import org.eclipse.jetty.server.Slf4jRequestLogWriter;
@@ -21,7 +22,6 @@ import static javax.servlet.DispatcherType.ASYNC;
 import static javax.servlet.DispatcherType.ERROR;
 import static javax.servlet.DispatcherType.REQUEST;
 import static org.slf4j.LoggerFactory.getLogger;
-import static org.zalando.logbook.Conditions.exclude;
 import static org.zalando.logbook.DefaultHttpLogWriter.Level.INFO;
 
 public class Application {
@@ -32,11 +32,17 @@ public class Application {
     ServletContextHandler servletContextHandler = new ServletContextHandler();
     addLoggingFilter(servletContextHandler);
     jettyWebServer.withRequestLog(createRequestLog());
-    servletContextHandler.addServlet(new ServletHolder(new UseCaseServlet(new StarWarsService(new LoggingHttpClient(new UnirestHttpClient(), new HttpLoggingFormatter())))), "/usecase/*");
+    servletContextHandler.addServlet(
+            new ServletHolder(
+                    new UseCaseServlet(
+                            new StarWarsService(
+                                    new LoggingHttpClient(
+                                            new UnirestHttpClient(), new HttpLoggingFormatter())),
+                            new DataProvider())),
+            "/usecase/*");
     jettyWebServer.withHandler(servletContextHandler);
     jettyWebServer.startServer();
   }
-
 
 
   public static void addLoggingFilter(ServletContextHandler servletContextHandler) {
