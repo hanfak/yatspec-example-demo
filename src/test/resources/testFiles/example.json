@@ -1,0 +1,19 @@
+{
+  "randomInteger": 5,
+  "randomFloat": 62.217,
+  "randomBoolean": true,
+  "dictionary": [
+    {
+      "key": 0,
+      "value": "java"
+    },
+    {
+      "key": 1,
+      "value": "python"
+    },
+    {
+      "key": 2,
+      "value": "go"
+    }
+  ]
+}
