@@ -11,10 +11,15 @@ CREATE TABLE records.characters(
    CREATED_AT     TIMESTAMP     DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-INSERT INTO records.characters (PERSON_ID, PERSON_NAME) VALUES ('1', 'Luke');
-INSERT INTO records.characters (PERSON_ID, PERSON_NAME) VALUES ('1', 'Luke');
-INSERT INTO records.characters (PERSON_ID, PERSON_NAME) VALUES ('1', 'Luke');
-INSERT INTO records.characters (PERSON_ID, PERSON_NAME) VALUES ('1', 'Luke');
+INSERT INTO records.characters (PERSON_ID, PERSON_NAME) VALUES ('1', 'Luke Skywalker');
+INSERT INTO records.characters (PERSON_ID, PERSON_NAME) VALUES ('2', 'C-3PO');
+INSERT INTO records.characters (PERSON_ID, PERSON_NAME) VALUES ('4', 'Darth Vader');
+INSERT INTO records.characters (PERSON_ID, PERSON_NAME) VALUES ('5', 'Leia Organa');
+INSERT INTO records.characters (PERSON_ID, PERSON_NAME) VALUES ('13', 'Chewbacca');
+INSERT INTO records.characters (PERSON_ID, PERSON_NAME) VALUES ('14', 'Han Solo');
+INSERT INTO records.characters (PERSON_ID, PERSON_NAME) VALUES ('16', 'Jabba');
+INSERT INTO records.characters (PERSON_ID, PERSON_NAME) VALUES ('20', 'Yoda');
+INSERT INTO records.characters (PERSON_ID, PERSON_NAME) VALUES ('22', 'Boba Fett');
 
 CREATE TABLE records.characterInfo(
    ID                   integer       DEFAULT nextval('characterInfo_sequence'::regclass) NOT NULL UNIQUE,

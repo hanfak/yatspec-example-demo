@@ -13,6 +13,7 @@ public class DatabaseMigration {
                     "docker")
             .schemas("records")
             .load();
+    flyway.clean();
     flyway.migrate();
   }
 
