@@ -9,6 +9,7 @@
 - assert on logs
 - assert on what is in the database
 - assertj
+- failsafe, artifact locations
 - wiremock and/or jzonbie
 - show wiremock primings
 - log request and response, for entry and internal
@@ -21,5 +22,6 @@
 - Notes
 - linking notes
 - dictionary
+- Have tests run when docker is running ie build
 - java 11 version
 - junit 5
