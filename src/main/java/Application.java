@@ -1,4 +1,7 @@
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import databaseservice.DataProvider;
+import fileservice.CounterService;
+import fileservice.FileService;
 import logging.LoggingCategory;
 import org.eclipse.jetty.server.CustomRequestLog;
 import org.eclipse.jetty.server.Slf4jRequestLogWriter;
@@ -38,7 +41,7 @@ public class Application {
                             new StarWarsService(
                                     new LoggingHttpClient(
                                             new UnirestHttpClient(), new HttpLoggingFormatter())),
-                            new DataProvider())),
+                            new DataProvider(), new FileService(new CounterService(), new XmlMapper()))),
             "/usecase/*");
     jettyWebServer.withHandler(servletContextHandler);
     jettyWebServer.startServer();

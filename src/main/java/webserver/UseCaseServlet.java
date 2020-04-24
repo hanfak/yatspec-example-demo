@@ -3,6 +3,7 @@ package webserver;
 import databaseservice.DataProvider;
 import domain.Person;
 import domain.Species;
+import fileservice.FileService;
 import starwarsservice.StarWarsService;
 
 import javax.servlet.http.HttpServlet;
@@ -13,12 +14,15 @@ import java.io.IOException;
 import static java.lang.String.format;
 
 public class UseCaseServlet extends HttpServlet {
+
   private final StarWarsService starWarsService;
   private final DataProvider dataProvider;
+  private final FileService fileService;
 
-  public UseCaseServlet(StarWarsService starWarsService, DataProvider dataProvider) {
+  public UseCaseServlet(StarWarsService starWarsService, DataProvider dataProvider, FileService fileService) {
     this.starWarsService = starWarsService;
     this.dataProvider = dataProvider;
+    this.fileService = fileService;
   }
 
   @Override
@@ -42,7 +46,7 @@ public class UseCaseServlet extends HttpServlet {
     Species speciesInfo = starWarsService.getSpeciesInfo(characterInfo.getSpecies());
 
     // Store data in file
-    // TODO next
+    fileService.storeData(personId, characterInfo, speciesInfo);
 
     // Add some logs ???
 
@@ -54,6 +58,7 @@ public class UseCaseServlet extends HttpServlet {
   }
 }
 // database - use test container
+// file service - use acutally files or mocks
 // http service - use wiremock
 // jms - mockito/stub or lbrary
 
