@@ -1,3 +1,5 @@
+package wiring;
+
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import databaseservice.DataProvider;
 import fileservice.CounterService;
@@ -17,6 +19,7 @@ import starwarsservice.LoggingHttpClient;
 import starwarsservice.StarWarsService;
 import starwarsservice.UnirestHttpClient;
 import webserver.JettyWebServer;
+import webserver.UseCaseOneServlet;
 import webserver.UseCaseServlet;
 
 import java.util.EnumSet;
@@ -28,13 +31,20 @@ import static org.slf4j.LoggerFactory.getLogger;
 import static org.zalando.logbook.DefaultHttpLogWriter.Level.INFO;
 
 public class Application {
+
   private final static Logger APPLICATION_LOGGER = getLogger(LoggingCategory.APPLICATION.name());
+  private JettyWebServer jettyWebServer;
 
   public static void main(String... args) {
-    JettyWebServer jettyWebServer = new JettyWebServer(2222, APPLICATION_LOGGER);
+    new Application().start();
+  }
+  // TODO tidy up
+  public void start() {
+    jettyWebServer = new JettyWebServer(2222, APPLICATION_LOGGER);
     ServletContextHandler servletContextHandler = new ServletContextHandler();
     addLoggingFilter(servletContextHandler);
     jettyWebServer.withRequestLog(createRequestLog());
+    servletContextHandler.addServlet(new ServletHolder(new UseCaseOneServlet()), "/usecaseone");
     servletContextHandler.addServlet(
             new ServletHolder(
                     new UseCaseServlet(
@@ -45,6 +55,10 @@ public class Application {
             "/usecase/*");
     jettyWebServer.withHandler(servletContextHandler);
     jettyWebServer.startServer();
+  }
+
+  public void stop() {
+    jettyWebServer.stopServer();
   }
 
 
