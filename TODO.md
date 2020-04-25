@@ -8,7 +8,10 @@
 - assert on internal request to thirdparty
 - assert on logs
 - assert on what is in the database
-- assertj
+- example of using a fluent api (codac)
+- getType form captured inputs andoutputs to assert on
+- hamcrest using state extractor
+- assertj using state extractor
 - failsafe, artifact locations
 - wiremock and/or jzonbie
 - show wiremock primings
