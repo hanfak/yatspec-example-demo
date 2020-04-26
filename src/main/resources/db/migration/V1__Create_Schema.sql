@@ -29,7 +29,7 @@ CREATE TABLE records.characterInfo(
    BIRTH_YEAR           varchar(50)   NOT NULL,
    CREATED_AT           TIMESTAMP     DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
-
+--Change name to species
 CREATE TABLE records.specifiesInfo(
    ID             integer       DEFAULT nextval('specifiesInfo_sequence'::regclass) NOT NULL UNIQUE,
    SPECIES_ID     integer       DEFAULT currval('specifiesInfo_sequence'::regclass) NOT NULL UNIQUE PRIMARY KEY,

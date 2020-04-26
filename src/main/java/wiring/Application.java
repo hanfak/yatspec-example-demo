@@ -1,7 +1,7 @@
 package wiring;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import databaseservice.DataProvider;
+import databaseservice.CharacterDataProvider;
 import fileservice.CounterService;
 import fileservice.FileService;
 import logging.LoggingCategory;
@@ -21,6 +21,7 @@ import starwarsservice.UnirestHttpClient;
 import webserver.JettyWebServer;
 import webserver.UseCaseOneServlet;
 import webserver.UseCaseServlet;
+import webserver.UseCaseTwoServlet;
 
 import java.util.EnumSet;
 
@@ -46,13 +47,14 @@ public class Application {
     addLoggingFilter(servletContextHandler);
     jettyWebServer.withRequestLog(createRequestLog());
     servletContextHandler.addServlet(new ServletHolder(new UseCaseOneServlet()), "/usecaseone");
+    servletContextHandler.addServlet(new ServletHolder(new UseCaseTwoServlet(new CharacterDataProvider())), "/usecasetwo");
     servletContextHandler.addServlet(
             new ServletHolder(
                     new UseCaseServlet(
                             new StarWarsService(
                                     new LoggingHttpClient(
                                             new UnirestHttpClient(), new HttpLoggingFormatter())),
-                            new DataProvider(), new FileService(new CounterService(), new XmlMapper()))),
+                            new CharacterDataProvider(), new FileService(new CounterService(), new XmlMapper()))),
             "/usecase/*");
     jettyWebServer.withHandler(servletContextHandler);
     jettyWebServer.startServer();

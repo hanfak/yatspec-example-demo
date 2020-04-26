@@ -1,7 +1,7 @@
 package documentationtest;
 
 import com.googlecode.yatspec.junit.SpecRunner;
-import databaseservice.DataProvider;
+import databaseservice.CharacterDataProvider;
 import domain.Person;
 import domain.Species;
 import fileservice.FileService;
@@ -12,7 +12,6 @@ import webserver.UseCaseServlet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -39,7 +38,7 @@ public class ExampleOneTest {
 
   private void givenADataProviderReturnsTheCharacterNameForId(String name) {
     personId = 22;
-    when(dataProvider.getPersonId(name)).thenReturn(personId);
+    when(characterDataProvider.getPersonId(name)).thenReturn(personId);
   }
 
   private void andStarWarsServiceReturnsTheCharacterInformation() throws IOException {
@@ -68,7 +67,7 @@ public class ExampleOneTest {
   }
 
   private void andTheDataProviderSavesTheCharacterInformation() {
-    verify(dataProvider).storeCharacterInfo(String.valueOf(personId), yoda);
+    verify(characterDataProvider).storeCharacterInfo(String.valueOf(personId), yoda);
   }
 
   private void andTheFileServiceStoresTheInformationAboutTheCharacter() {
@@ -85,7 +84,7 @@ public class ExampleOneTest {
   private final PrintWriter printWriter = mock(PrintWriter.class);
 
   private final StarWarsService starWarsService = mock(StarWarsService.class);
-  private final DataProvider dataProvider = mock(DataProvider.class);
+  private final CharacterDataProvider characterDataProvider = mock(CharacterDataProvider.class);
   private final FileService fileService = mock(FileService.class);
-  private final UseCaseServlet underTest = new UseCaseServlet(starWarsService, dataProvider, fileService);
+  private final UseCaseServlet underTest = new UseCaseServlet(starWarsService, characterDataProvider, fileService);
 }
