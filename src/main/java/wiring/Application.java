@@ -39,6 +39,7 @@ public class Application {
     new Application().start();
   }
   // TODO tidy up
+  // For test to access
   public void start() {
     jettyWebServer = new JettyWebServer(2222, APPLICATION_LOGGER);
     ServletContextHandler servletContextHandler = new ServletContextHandler();

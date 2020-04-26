@@ -1,4 +1,4 @@
-package endtoendtests;
+package endtoendtests.reqandresponly;
 
 import com.googlecode.yatspec.junit.SpecResultListener;
 import com.googlecode.yatspec.junit.SpecRunner;
