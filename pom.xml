@@ -14,6 +14,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <required.maven.version>3.6.0</required.maven.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <root.package>${project.groupId}</root.package>
         <java.version>1.8</java.version>
         <skipTests>false</skipTests>
@@ -64,6 +65,73 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+                <configuration>
+                    <runOrder>failedfirst</runOrder>
+                    <trimStackTrace>false</trimStackTrace>
+                    <systemPropertyVariables>
+                        <log4j.log.dir>${project.build.directory}/surefire-reports/logs</log4j.log.dir>
+                        <yatspec.output.dir>${project.build.directory}/surefire-reports/yatspec
+                        </yatspec.output.dir>
+                    </systemPropertyVariables>
+                    <environmentVariables>
+                        <NAMESPACE>surefireunittests</NAMESPACE>
+                    </environmentVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>${project.groupId}.endtoendtests/**/*.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--acceptance tests-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>${maven.surefire.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                        <configuration>
+                            <trimStackTrace>false</trimStackTrace>
+                            <!-- Ensure that the integration tests do not rely on any production code -->
+                            <classpathDependencyScopeExclude>compile</classpathDependencyScopeExclude>
+                            <systemPropertyVariables>
+                                <project.version>${project.version}</project.version>
+                                <yatspec.output.dir>${project.build.directory}/failsafe-reports/yatspec
+                                </yatspec.output.dir>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includes>
+                        <include>${project.groupId}.endtoendtests/**/*.java</include>
+                    </includes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jooq</groupId>

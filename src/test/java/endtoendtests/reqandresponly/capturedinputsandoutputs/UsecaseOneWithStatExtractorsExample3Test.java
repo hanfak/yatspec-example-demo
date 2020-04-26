@@ -16,6 +16,7 @@ import com.mashape.unirest.http.Headers;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
+import org.assertj.core.api.AbstractIntegerAssert;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 
@@ -44,6 +46,8 @@ public class UsecaseOneWithStatExtractorsExample3Test extends TestState implemen
     then(statusCode(), is(200));
     and(responseBody(), is("Hello, World"));
     and(responseHeaders(), hasHeaderValue("text/html"));
+
+    then(actualStatusCode()).isEqualTo(200);
   }
 
   private ActionUnderTest weMakeAGetRequestTo(String path) {
@@ -75,6 +79,16 @@ public class UsecaseOneWithStatExtractorsExample3Test extends TestState implemen
   private Matcher<Iterable<? super String>> hasHeaderValue(String value) {
     return hasItem(value);
   }
+
+  private AbstractIntegerAssert<?> then(Integer actual) {
+    return assertThat(actual);
+  }
+
+  public Integer actualStatusCode() throws Exception {
+    StateExtractor<Integer> response = capturedInputAndOutputs -> capturedInputAndOutputs.getType(RESPONSE_FROM_APPLICATION, UnirestResponseWrapper.class).getStatus();
+    return response.execute(capturedInputAndOutputs);
+  }
+
 
   // Unirest does not have a toString representation of the request and response, which we need
   // for the yatspec output and to use for asserting on. This may not apply to you http client library

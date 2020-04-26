@@ -95,6 +95,7 @@ public class UsecaseOneWithStatExtractorsExample2Test extends TestState implemen
   }
 
   // wrapping assertThat with BDD language - not great as not generic could make it generic using wrapper class
+  // Cannot use BDDAssertions.then as it need to qualify it with class name which will show up in yatspec output
   private AbstractIntegerAssert<?> then(Integer actual) {
     return assertThat(actual);
   }

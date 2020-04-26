@@ -1,21 +1,32 @@
-- Create Yatspec test 
+- Create Yatspec test (X)
 - Use givens builder
-- User captured inputs and outputs
+- Use and assert on captured inputs and outputs
+    - app req & resp (X)
+    - multiple req & resp (ext and int)
+    - for db
+    - for logs
+    - for objects
 - Sequence diagrams
-- interesting givens
-- assert on captured inputs and outputs
--  assert on request and response
+    - external calls (X)
+    - now internal calls
+    - multiple internal calls
+- use interesting givens, and get type see   AppointmentReservationLookupResourceReturnsReservationTest - clyde
+    - getType form captured inputs andoutputs to assert on
+- assert on custom map (x)
+- assert on request and response
+    - using fields (X)
 - assert on internal request to thirdparty
 - assert on logs
 - assert on what is in the database
 - example of using a fluent api (codac)
-- getType form captured inputs andoutputs to assert on
-- hamcrest using state extractor
-- assertj using state extractor
+- hamcrest using state extractor (X)
+- assertj using state extractor (X)
 - failsafe, artifact locations
 - wiremock and/or jzonbie
 - show wiremock primings
-- log request and response, for entry and internal
+- log request and response, 
+    - for entry (X)
+     - and internal
 - log database contents
 - log file contents
 - log folder contents
@@ -25,6 +36,8 @@
 - Notes
 - linking notes
 - dictionary
+- html ouput index page
 - Have tests run when docker is running ie build
-- java 11 version
-- junit 5
+- New project
+    - java 11 version
+    - junit 5
