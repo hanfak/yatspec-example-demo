@@ -11,7 +11,11 @@
     - now internal calls
     - multiple internal calls
 - use interesting givens, and get type see   AppointmentReservationLookupResourceReturnsReservationTest - clyde
-    - getType form captured inputs andoutputs to assert on
+    - getType form captured inputs andoutputs to assert on, use when with this lambda
+            (givens, capturedInputAndOutputs) -> {... return capturedInputAndOutputs } 
+    - builder pattern see GivenButtersReturnsAddress in clyde
+    - compositeGivens see clyde
+    - addToGivens wrappers see AbstractTestCase in clyde
 - assert on custom map (x)
 - assert on request and response
     - using fields (X)
