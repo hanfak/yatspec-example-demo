@@ -109,8 +109,8 @@ public class UsecaseTwoWithDatabaseExample2Test extends TestState implements Wit
   }
 
   private static final String HOST = "http://localhost:2222";
-  public static final String REQUEST_TO_APPLICATION = "Request from User to Pacman";
-  public static final String RESPONSE_FROM_APPLICATION = "Response from Pacman to User";
+  private static final String REQUEST_TO_APPLICATION = "Request from User to Pacman";
+  private static final String RESPONSE_FROM_APPLICATION = "Response from Pacman to User";
   private final TestDataProvider testDataProvider = new TestDataProvider();
   private final Application application = new Application();
 }
