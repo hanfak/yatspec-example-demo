@@ -8,6 +8,7 @@ import org.jooq.impl.DSL;
 import javax.sql.DataSource;
 
 import static org.jooq.sources.Tables.CHARACTERINFO;
+import static org.jooq.sources.Tables.CHARACTERS;
 import static org.jooq.sources.Tables.SPECIFIESINFO;
 // TODO extend CharacterDataProvider, which is newed when app is started in test context
 // TODO need to seperate factories into new class, n pass into app.start
@@ -25,10 +26,25 @@ public class TestDataProvider {
             .execute();
   }
 
+  public void storeCharacter(Integer personId, String name){
+    DSLContext dslContext = DSL.using(dataSource, SQLDialect.POSTGRES);
+    dslContext.insertInto(CHARACTERS)
+            .set(CHARACTERS.PERSON_ID, personId)
+            .set(CHARACTERS.PERSON_NAME, name)
+            .execute();
+  }
+
   public void deleteAllInfo() {
     DSLContext dslContext = DSL.using(dataSource, SQLDialect.POSTGRES);
     dslContext.deleteFrom(CHARACTERINFO).execute();
     dslContext.deleteFrom(SPECIFIESINFO).execute();
+  }
+
+  public void deleteAllInfoFromAllTables() {
+    DSLContext dslContext = DSL.using(dataSource, SQLDialect.POSTGRES);
+    dslContext.deleteFrom(CHARACTERINFO).execute();
+    dslContext.deleteFrom(SPECIFIESINFO).execute();
+    dslContext.deleteFrom(CHARACTERS).execute();
   }
 
 }

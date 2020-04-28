@@ -8,10 +8,7 @@ import com.googlecode.yatspec.plugin.sequencediagram.SequenceDiagramGenerator;
 import com.googlecode.yatspec.plugin.sequencediagram.SvgWrapper;
 import com.googlecode.yatspec.rendering.html.DontHighlightRenderer;
 import com.googlecode.yatspec.rendering.html.HtmlResultRenderer;
-import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
-import com.googlecode.yatspec.state.givenwhenthen.CapturedInputAndOutputs;
-import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
-import com.googlecode.yatspec.state.givenwhenthen.TestState;
+import com.googlecode.yatspec.state.givenwhenthen.*;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
@@ -28,20 +25,28 @@ import static org.hamcrest.CoreMatchers.is;
 
 @SuppressWarnings("SameParameterValue") // For test readability
 @RunWith(SpecRunner.class)
-public class UsecaseOneWithDatabaseExample1Test extends TestState implements WithCustomResultListeners {
+public class UsecaseTwoWithDatabaseExample2Test extends TestState implements WithCustomResultListeners {
 
   @Test
   public void shouldReturnResponse() throws Exception {
-    givenTheSpecifiesTableIsPrimedWithPersonId(1, speciesName("Ogier"), averageHeight(3.5F), andLifespan(500));
+    given(theSpecifiesTableIsPrimedWith(1, speciesName("Ogier"), averageHeight(3.5F), andLifespan(500)));
 
     when(weMakeAGetRequestTo("/usecasetwo"));
 
     then(responseBody(), is("Hello, Ogier, who lives for 500 years and has average height of 3.5 metres"));
   }
 
-  // Priming database
-  private void givenTheSpecifiesTableIsPrimedWithPersonId(int personId, String name, float avgHeight, int lifeSpan) {
-    testDataProvider.storeSpecifiesInfo(personId, name, avgHeight, lifeSpan);
+  private GivensBuilder theSpecifiesTableIsPrimedWith(int personId, String name, float avgHeight, int lifeSpan) {
+    // uses a givens builder to run the priming of the database
+    return interestingGivens -> {
+      testDataProvider.storeSpecifiesInfo(personId, name, avgHeight, lifeSpan);
+      // Add this to yatspec output, and highlights the values in the tests
+      interestingGivens.add("personId", personId);
+      interestingGivens.add("species name", name);
+      interestingGivens.add("average height", avgHeight);
+      interestingGivens.add("lifespan", lifeSpan);
+      return interestingGivens;
+    };
   }
 
   // Wrappers to make yatspec out readable
@@ -58,7 +63,12 @@ public class UsecaseOneWithDatabaseExample1Test extends TestState implements Wit
   }
 
   private ActionUnderTest weMakeAGetRequestTo(String path) {
-    return (interestingGivens, capturedInputAndOutputs) -> whenWeMakeARequestTo(capturedInputAndOutputs, path);
+    return (interestingGivens, capturedInputAndOutputs) -> {
+      // can access interesting givens in when:
+      Integer lifespan = interestingGivens.getType("lifespan", Integer.class);
+      System.out.println("lifespan = " + lifespan);
+      return whenWeMakeARequestTo(capturedInputAndOutputs, path);
+    };
   }
 
   public StateExtractor<String> responseBody() {
@@ -88,7 +98,6 @@ public class UsecaseOneWithDatabaseExample1Test extends TestState implements Wit
 
   @Before
   public void setUp() {
-    // Delete data before tests, so we can data after test is run to help with debugging
     testDataProvider.deleteAllInfo();
     application.start();
   }
@@ -102,7 +111,6 @@ public class UsecaseOneWithDatabaseExample1Test extends TestState implements Wit
   private static final String HOST = "http://localhost:2222";
   public static final String REQUEST_TO_APPLICATION = "Request from User to Pacman";
   public static final String RESPONSE_FROM_APPLICATION = "Response from Pacman to User";
-
   private final TestDataProvider testDataProvider = new TestDataProvider();
   private final Application application = new Application();
 }

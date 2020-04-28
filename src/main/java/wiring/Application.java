@@ -18,10 +18,7 @@ import starwarsservice.HttpLoggingFormatter;
 import starwarsservice.LoggingHttpClient;
 import starwarsservice.StarWarsService;
 import starwarsservice.UnirestHttpClient;
-import webserver.JettyWebServer;
-import webserver.UseCaseOneServlet;
-import webserver.UseCaseServlet;
-import webserver.UseCaseTwoServlet;
+import webserver.*;
 
 import java.util.EnumSet;
 
@@ -48,6 +45,7 @@ public class Application {
     jettyWebServer.withRequestLog(createRequestLog());
     servletContextHandler.addServlet(new ServletHolder(new UseCaseOneServlet()), "/usecaseone");
     servletContextHandler.addServlet(new ServletHolder(new UseCaseTwoServlet(new CharacterDataProvider())), "/usecasetwo");
+    servletContextHandler.addServlet(new ServletHolder(new UseCaseThreeServlet(new CharacterDataProvider())), "/usecasethree/*");
     servletContextHandler.addServlet(
             new ServletHolder(
                     new UseCaseServlet(
