@@ -21,37 +21,37 @@ import org.junit.runner.RunWith;
 import wiring.Application;
 
 import java.util.Random;
+import java.util.StringJoiner;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 
 @SuppressWarnings("SameParameterValue") // For test readability
 @RunWith(SpecRunner.class)
-public class UsecaseThreeWithDatabaseExample1Test extends TestState implements WithCustomResultListeners {
+public class UsecaseThreeWithDatabaseExample2Test extends TestState implements WithCustomResultListeners {
 
   @Test
   public void shouldReturnResponse() throws Exception {
-    // Multiple givens, as priming two tables, can hide this if not useful for documentation (ie call one within the other given)
     given(theCharacterTableIsPrimedWith(PERSON_ID, "Loial"));
-    given(theSpecifiesTableIsPrimedWith(PERSON_ID, speciesName(OGIER), averageHeight(AVG_HEIGHT), andLifespan(LIFESPAN)));
+    and(theSpecifiesTableIsPrimedWith(PERSON_ID, speciesName(OGIER), averageHeight(AVG_HEIGHT), andLifespan(LIFESPAN)));
 
     when(weMakeAGetRequest());
 
-    then(responseBody(), is("Hello, Loial, who lives for 500 years and has average height of 3.5 metres"));
+    then(responseBody(), is("Hello, Ogier, who lives for 500 years and has average height of 3.5 metres"));
   }
 
-  private GivensBuilder theCharacterTableIsPrimedWith(int personId, String name) {
+  private GivensBuilder theCharacterTableIsPrimedWith(PersonId personId, String name) {
     return interestingGivens -> {
-      // Adding to given some random variable which will be used in the db, and also used in the request(the when)
-      interestingGivens.add("person id", personId);
-      testDataProvider.storeCharacter(personId, name);
+      // Can store an object, which will use the class name as the key, the fields as the value (as long as toString is defined)
+      interestingGivens.add(personId);
+      testDataProvider.storeCharacter(personId.value, name);
       return interestingGivens;
     };
   }
 
-  private GivensBuilder theSpecifiesTableIsPrimedWith(int personId, String name, float avgHeight, int lifeSpan) {
+  private GivensBuilder theSpecifiesTableIsPrimedWith(PersonId personId, String name, float avgHeight, int lifeSpan) {
     return interestingGivens -> {
-      testDataProvider.storeSpecifiesInfo(personId, name, avgHeight, lifeSpan);
+      testDataProvider.storeSpecifiesInfo(personId.value, name, avgHeight, lifeSpan);
       return interestingGivens;
     };
   }
@@ -72,7 +72,7 @@ public class UsecaseThreeWithDatabaseExample1Test extends TestState implements W
   private ActionUnderTest weMakeAGetRequest() {
     return (interestingGivens, capturedInputAndOutputs) -> {
       // Grabbing the value from interesting given, to use in request
-      Integer personId = interestingGivens.getType("person id", Integer.class); // TODO use object instead
+      Integer personId = interestingGivens.getType(PersonId.class).value;
       return whenWeMakeARequestTo(capturedInputAndOutputs, "/usecasethree/" + personId);
     };
   }
@@ -101,6 +101,7 @@ public class UsecaseThreeWithDatabaseExample1Test extends TestState implements W
     return new SequenceDiagramGenerator()
             .generateSequenceDiagram(new ByNamingConventionMessageProducer().messages(capturedInputAndOutputs));
   }
+
   // Use a wrapper to add to givens, so dont need to create variable and then add to given separately
   public <T> T addToGivens(String key, T t) {
     interestingGivens.add(key, t);
@@ -120,16 +121,31 @@ public class UsecaseThreeWithDatabaseExample1Test extends TestState implements W
   }
 
   private static final String HOST = "http://localhost:2222";
-  // this can be any value, we don't know, but it will be used in different places and needs to be stored in interesting givens
-  private static final int PERSON_ID = new Random().ints(100, (999)).findFirst().orElse(0);
   private static final String REQUEST_TO_APPLICATION = "Request from User to Pacman";
   private static final String RESPONSE_FROM_APPLICATION = "Response from Pacman to User";
+  // this can be any value, we don't know, but it will be used in different places and needs to be stored in interesting givens
+  private static final PersonId PERSON_ID = new PersonId(new Random().ints(100, (999)).findFirst().orElse(0));
 
   private final String OGIER = addToGivens("species name", "Ogier");
   private final float AVG_HEIGHT = addToGivens("average height", 3.5F);
   private final int LIFESPAN = addToGivens("lifespan", 500);
   private final TestDataProvider testDataProvider = new TestDataProvider();
   private final Application application = new Application();
+
+  public static class PersonId {
+    public final Integer value;
+
+    public PersonId(Integer value) {
+      this.value = value;
+    }
+
+    @Override
+    public String toString() {
+      return new StringJoiner(", ", PersonId.class.getSimpleName() + "[", "]")
+              .add("value=" + value)
+              .toString();
+    }
+  }
 }
 
 
