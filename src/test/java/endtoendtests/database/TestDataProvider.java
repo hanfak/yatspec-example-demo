@@ -1,4 +1,4 @@
-package endtoendtests.reqandresponly.database;
+package endtoendtests.database;
 
 import databaseservice.DatasourceConfig;
 import org.jooq.DSLContext;
