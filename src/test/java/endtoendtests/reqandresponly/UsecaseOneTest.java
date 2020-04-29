@@ -35,10 +35,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings("SameParameterValue") // For test readability
 @RunWith(SpecRunner.class)
 public class UsecaseOneTest extends TestState implements WithCustomResultListeners {
-
+  // Using yatspec dsl
   @Test
   public void shouldReturnResponse() throws Exception {
-    when(weMakeAGetRequestTo("/usecaseone")); // Using yatspec dsl
+    when(weMakeAGetRequestTo("/usecaseone"));
 
     thenItReturnsAStatusCodeOf(200);
     andTheBodyIs("Hello, World");

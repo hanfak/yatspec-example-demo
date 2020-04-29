@@ -98,7 +98,8 @@ public class UsecaseTwoWithDatabaseExample2Test extends TestState implements Wit
 
   @Before
   public void setUp() {
-    testDataProvider.deleteAllInfo();
+    testDataProvider.deleteAllInfoFromAllTables();
+    testDataProvider.populateTables();
     application.start();
   }
 

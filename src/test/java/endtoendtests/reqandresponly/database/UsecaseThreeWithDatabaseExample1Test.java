@@ -28,16 +28,15 @@ import static org.hamcrest.CoreMatchers.is;
 @SuppressWarnings("SameParameterValue") // For test readability
 @RunWith(SpecRunner.class)
 public class UsecaseThreeWithDatabaseExample1Test extends TestState implements WithCustomResultListeners {
-
+  // Multiple givens, as priming two tables, can hide this if not useful for documentation (ie call one within the other given)
   @Test
   public void shouldReturnResponse() throws Exception {
-    // Multiple givens, as priming two tables, can hide this if not useful for documentation (ie call one within the other given)
     given(theCharacterTableIsPrimedWith(PERSON_ID, "Loial"));
     given(theSpecifiesTableIsPrimedWith(PERSON_ID, speciesName(OGIER), averageHeight(AVG_HEIGHT), andLifespan(LIFESPAN)));
 
     when(weMakeAGetRequest());
 
-    then(responseBody(), is("Hello, Loial, who lives for 500 years and has average height of 3.5 metres"));
+    then(responseBody(), is("Hello, Ogier, who lives for 500 years and has average height of 3.5 metres"));
   }
 
   private GivensBuilder theCharacterTableIsPrimedWith(int personId, String name) {

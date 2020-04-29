@@ -34,6 +34,11 @@ public class TestDataProvider {
             .execute();
   }
 
+  public void populateTables() {
+    storeCharacter(1, "blah");
+  }
+
+
   public void deleteAllInfo() {
     DSLContext dslContext = DSL.using(dataSource, SQLDialect.POSTGRES);
     dslContext.deleteFrom(CHARACTERINFO).execute();

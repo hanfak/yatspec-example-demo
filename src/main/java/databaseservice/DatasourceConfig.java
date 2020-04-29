@@ -15,7 +15,7 @@ public class DatasourceConfig {
     config.setUsername("postgres");
     config.setPassword("docker");
     config.setAutoCommit(true);
-    config.setMaximumPoolSize(10);
+    config.setMaximumPoolSize(1);
     return new HikariDataSource(config);
   }
 }

@@ -16,3 +16,8 @@ psql -h localhost -U postgres -d postgres
 ********
  Access: 
  http://localhost:2222/usecase/Luke%20Skywalker
+ 
+## Notes
+
+- Run one test class at a time. All test run will take time, have not set hikari properly
+- 
