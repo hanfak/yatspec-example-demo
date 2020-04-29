@@ -1,4 +1,4 @@
-package endtoendtests.reqandresponly.database;
+package endtoendtests.database;
 
 import com.googlecode.yatspec.junit.SpecResultListener;
 import com.googlecode.yatspec.junit.SpecRunner;
@@ -20,31 +20,37 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import wiring.Application;
 
+import java.util.Random;
+
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 
 @SuppressWarnings("SameParameterValue") // For test readability
 @RunWith(SpecRunner.class)
-public class UsecaseTwoWithDatabaseExample2Test extends TestState implements WithCustomResultListeners {
+public class UsecaseThreeWithDatabaseExample3Test extends TestState implements WithCustomResultListeners {
 
   @Test
   public void shouldReturnResponse() throws Exception {
-    given(theSpecifiesTableIsPrimedWith(1, speciesName("Ogier"), averageHeight(3.5F), andLifespan(500)));
+    given(theCharacterTableIsPrimedWith(PERSON_ID, "Loial"));
+    given(theSpecifiesTableIsPrimedWith(PERSON_ID, speciesName(OGIER), averageHeight(AVG_HEIGHT), andLifespan(LIFESPAN)));
 
-    when(weMakeAGetRequestTo("/usecasetwo"));
+    when(weMakeAGetRequest());
 
     then(responseBody(), is("Hello, Ogier, who lives for 500 years and has average height of 3.5 metres"));
   }
 
+  private GivensBuilder theCharacterTableIsPrimedWith(int personId, String name) {
+    return interestingGivens -> {
+      // Adding to given some random variable which will be used in the db, and also used in the request(the when)
+      interestingGivens.add("person id", personId);
+      testDataProvider.storeCharacter(personId, name);
+      return interestingGivens;
+    };
+  }
+
   private GivensBuilder theSpecifiesTableIsPrimedWith(int personId, String name, float avgHeight, int lifeSpan) {
-    // uses a givens builder to run the priming of the database
     return interestingGivens -> {
       testDataProvider.storeSpecifiesInfo(personId, name, avgHeight, lifeSpan);
-      // Add this to yatspec output, and highlights the values in the tests
-      interestingGivens.add("personId", personId);
-      interestingGivens.add("species name", name);
-      interestingGivens.add("average height", avgHeight);
-      interestingGivens.add("lifespan", lifeSpan);
       return interestingGivens;
     };
   }
@@ -62,12 +68,11 @@ public class UsecaseTwoWithDatabaseExample2Test extends TestState implements Wit
     return lifespan;
   }
 
-  private ActionUnderTest weMakeAGetRequestTo(String path) {
+  private ActionUnderTest weMakeAGetRequest() {
     return (interestingGivens, capturedInputAndOutputs) -> {
-      // can access interesting givens in when:
-      Integer lifespan = interestingGivens.getType("lifespan", Integer.class);
-      System.out.println("lifespan = " + lifespan);
-      return whenWeMakeARequestTo(capturedInputAndOutputs, path);
+      // Grabbing the value from interesting given, to use in request
+      Integer personId = interestingGivens.getType("person id", Integer.class); // TODO use object instead
+      return whenWeMakeARequestTo(capturedInputAndOutputs, "/usecasethree/" + personId);
     };
   }
 
@@ -95,11 +100,15 @@ public class UsecaseTwoWithDatabaseExample2Test extends TestState implements Wit
     return new SequenceDiagramGenerator()
             .generateSequenceDiagram(new ByNamingConventionMessageProducer().messages(capturedInputAndOutputs));
   }
+  // Use a wrapper to add to givens, so dont need to create variable and then add to given separately
+  public <T> T addToGivens(String key, T t) {
+    interestingGivens.add(key, t);
+    return t;
+  }
 
   @Before
   public void setUp() {
     testDataProvider.deleteAllInfoFromAllTables();
-    testDataProvider.populateTables();
     application.start();
   }
 
@@ -109,6 +118,11 @@ public class UsecaseTwoWithDatabaseExample2Test extends TestState implements Wit
     capturedInputAndOutputs.add("Sequence Diagram", generateSequenceDiagram()); // creates sequence diagram
   }
 
+  // this can be any value, we don't know, but it will be used in different places and needs to be stored in interesting givens
+  private final int PERSON_ID = new Random().ints(100, (999)).findFirst().orElse(0);
+  private final String OGIER = addToGivens("species name", "Ogier");
+  private final float AVG_HEIGHT = addToGivens("average height", 3.5F);
+  private final int LIFESPAN = addToGivens("lifespan", 500);
   private static final String HOST = "http://localhost:2222";
   private static final String REQUEST_TO_APPLICATION = "Request from User to Pacman";
   private static final String RESPONSE_FROM_APPLICATION = "Response from Pacman to User";

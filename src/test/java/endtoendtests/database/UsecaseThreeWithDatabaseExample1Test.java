@@ -1,4 +1,4 @@
-package endtoendtests.reqandresponly.database;
+package endtoendtests.database;
 
 import com.googlecode.yatspec.junit.SpecResultListener;
 import com.googlecode.yatspec.junit.SpecRunner;
@@ -27,8 +27,8 @@ import static org.hamcrest.CoreMatchers.is;
 
 @SuppressWarnings("SameParameterValue") // For test readability
 @RunWith(SpecRunner.class)
-public class UsecaseThreeWithDatabaseExample3Test extends TestState implements WithCustomResultListeners {
-
+public class UsecaseThreeWithDatabaseExample1Test extends TestState implements WithCustomResultListeners {
+  // Multiple givens, as priming two tables, can hide this if not useful for documentation (ie call one within the other given)
   @Test
   public void shouldReturnResponse() throws Exception {
     given(theCharacterTableIsPrimedWith(PERSON_ID, "Loial"));
@@ -118,14 +118,15 @@ public class UsecaseThreeWithDatabaseExample3Test extends TestState implements W
     capturedInputAndOutputs.add("Sequence Diagram", generateSequenceDiagram()); // creates sequence diagram
   }
 
+  private static final String HOST = "http://localhost:2222";
   // this can be any value, we don't know, but it will be used in different places and needs to be stored in interesting givens
-  private final int PERSON_ID = new Random().ints(100, (999)).findFirst().orElse(0);
+  private static final int PERSON_ID = new Random().ints(100, (999)).findFirst().orElse(0);
+  private static final String REQUEST_TO_APPLICATION = "Request from User to Pacman";
+  private static final String RESPONSE_FROM_APPLICATION = "Response from Pacman to User";
+
   private final String OGIER = addToGivens("species name", "Ogier");
   private final float AVG_HEIGHT = addToGivens("average height", 3.5F);
   private final int LIFESPAN = addToGivens("lifespan", 500);
-  private static final String HOST = "http://localhost:2222";
-  private static final String REQUEST_TO_APPLICATION = "Request from User to Pacman";
-  private static final String RESPONSE_FROM_APPLICATION = "Response from Pacman to User";
   private final TestDataProvider testDataProvider = new TestDataProvider();
   private final Application application = new Application();
 }
