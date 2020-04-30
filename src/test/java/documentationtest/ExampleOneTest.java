@@ -18,7 +18,11 @@ import java.io.PrintWriter;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
+// Also known as acceptance test or business usecase test
+// Where the logic of the business is stored
+// As it relates to business logic/processes, it is good to document this and output in human readable form
+// The is a unit test, so can do lots of these. Useful for documenting lots of different cases,
+// instead of writing expensive end to end to tests
 @RunWith(SpecRunner.class)
 public class ExampleOneTest {
 

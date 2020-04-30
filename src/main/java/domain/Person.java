@@ -1,5 +1,7 @@
 package domain;
 
+import java.util.StringJoiner;
+
 public class Person {
   private final String species; // TODO change name
   private final String name;
@@ -21,5 +23,14 @@ public class Person {
 
   public String getBirthYear() {
     return birthYear;
+  }
+
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", Person.class.getSimpleName() + "[", "]")
+            .add("species='" + species + "'")
+            .add("name='" + name + "'")
+            .add("birthYear='" + birthYear + "'")
+            .toString();
   }
 }

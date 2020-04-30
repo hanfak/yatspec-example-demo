@@ -1,5 +1,8 @@
 - Create Yatspec test (X)
 - Use givens builder (X)
+- use YatspecTest from clean arch mattia,
+    - generic and,with etc
+    - 
 - Use yatspec log, instead of captured inputs and outputs for yatspec output
 - Use and assert on captured inputs and outputs
     - app req & resp (X)
@@ -13,10 +16,10 @@
     - multiple internal calls
 - use interesting givens, and get type see   AppointmentReservationLookupResourceReturnsReservationTest - clyde
     - getType form captured inputs andoutputs to assert on, use when with this lambda (X)
+    - addToGivens wrappers see AbstractTestCase in clyde (X)
     - builder pattern see GivenButtersReturnsAddress in clyde
     - compositeGivens see clyde
-    - addToGivens wrappers see AbstractTestCase in clyde (X)
-    - Use givens.gettype, from one given in another given
+    - Use givens.gettype, from one given in another given (X)
 - assert on custom map (x)
 - assert on request and response
     - using fields (X)
@@ -29,14 +32,6 @@
 - failsafe, artifact locations
 - wiremock and/or jzonbie
 - show wiremock primings
-- log request and response, 
-    - for entry (X)
-     - and internal
-- log database contents
-- log file contents
-- log folder contents
-- log all the logs
-- log jms or objects calls
 - Dsl for fluent assertions, whens and givens
 - Notes
 - linking notes

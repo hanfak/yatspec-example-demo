@@ -17,6 +17,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
 import org.assertj.core.api.AbstractIntegerAssert;
+import org.assertj.core.api.ListAssert;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
@@ -29,24 +30,22 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.is;
 
-// use captured input and outputs in assertions, as it stores what you want and get it out
 
 @SuppressWarnings("SameParameterValue") // For test readability
 @RunWith(SpecRunner.class)
-public class UsecaseOneWithStatExtractorsExample3Test extends TestState implements WithCustomResultListeners {
+public class UsecaseOneWithStatExtractorsExample4Test extends TestState implements WithCustomResultListeners {
 
   @Test
   public void shouldReturnResponse() throws Exception {
     when(weMakeAGetRequestTo("/usecaseone"));
 
-    then(statusCode(), is(200));
-    and(responseBody(), is("Hello, World"));
-    and(responseHeaders(), hasHeaderValue("text/html"));
-
+    assertThat(statusCode().execute(capturedInputAndOutputs)).isEqualTo(200);
+    thenTheStatusCodeIs(200);
     then(actualStatusCode()).isEqualTo(200);
+
+    assertThat(actualResponseHeaders()).contains("text/html");
+    then(actualResponseHeaders()).contains("text/html");
   }
 
   private ActionUnderTest weMakeAGetRequestTo(String path) {
@@ -54,8 +53,14 @@ public class UsecaseOneWithStatExtractorsExample3Test extends TestState implemen
   }
 
   public StateExtractor<Integer> statusCode() {
-    // Accessing captured inputs and output here, getType is an enhanced form of map
     return capturedInputAndOutputs -> capturedInputAndOutputs.getType(RESPONSE_FROM_APPLICATION, UnirestResponseWrapper.class).getStatus();
+  }
+
+  private void thenTheStatusCodeIs(int expectedStatusCode) throws Exception {
+    StateExtractor<Integer> statusCode =
+            capturedInputAndOutputs -> capturedInputAndOutputs.getType(RESPONSE_FROM_APPLICATION, UnirestResponseWrapper.class).getStatus();
+
+    assertThat(statusCode.execute(capturedInputAndOutputs)).isEqualTo(expectedStatusCode);
   }
 
   public StateExtractor<String> responseBody() {
@@ -70,16 +75,24 @@ public class UsecaseOneWithStatExtractorsExample3Test extends TestState implemen
     };
   }
 
+  public List<String> actualResponseHeaders() throws Exception {
+    StateExtractor<List<String>> headersStateExtractor = capturedInputAndOutputs -> {
+      Headers headers = capturedInputAndOutputs.getType(RESPONSE_FROM_APPLICATION, UnirestResponseWrapper.class).getHeaders();
+      return headers.values().stream()
+              .flatMap(List::stream).collect(Collectors.toList());
+    };
+    return headersStateExtractor.execute(capturedInputAndOutputs);
+  }
+
   public <ItemOfInterest> TestState and(StateExtractor<ItemOfInterest> extractor, Matcher<? super ItemOfInterest> matcher) throws Exception {
     return then(extractor, matcher);
   }
 
-  // Wrapped matcher for better readability
-  private Matcher<Iterable<? super String>> hasHeaderValue(String value) {
-    return hasItem(value);
+  private AbstractIntegerAssert<?> then(Integer actual) {
+    return assertThat(actual);
   }
 
-  private AbstractIntegerAssert<?> then(Integer actual) {
+  private ListAssert<String> then(List<String> actual) {
     return assertThat(actual);
   }
 
@@ -88,26 +101,17 @@ public class UsecaseOneWithStatExtractorsExample3Test extends TestState implemen
     return response.execute(capturedInputAndOutputs);
   }
 
-  // Unirest does not have a toString representation of the request and response, which we need
-  // for the yatspec output and to use for asserting on. This may not apply to you http client library
-  // Use of wrapper, to get add the toString impl, also get rid of the formatter for req and resp
-  //
   private CapturedInputAndOutputs whenWeMakeARequestTo(CapturedInputAndOutputs capturedInputAndOutputs, String path) throws UnirestException {
     HttpRequest getRequest = Unirest.get(HOST + path);
     UnirestRequestWrapper requestWrapper = new UnirestRequestWrapper(getRequest);
-    // Add the request into the map
     capturedInputAndOutputs.add(REQUEST_TO_APPLICATION, requestWrapper);
-
-    // execute request, and store in wrapper
     UnirestResponseWrapper response = new UnirestResponseWrapper(getRequest.asString());
-    // Add the response into the map
     capturedInputAndOutputs.add(RESPONSE_FROM_APPLICATION, response);
     return capturedInputAndOutputs;
   }
 
   @Override
   public Iterable<SpecResultListener> getResultListeners() {
-    //sequence diagram setup
     return singletonList(new HtmlResultRenderer()
             .withCustomHeaderContent(SequenceDiagramGenerator.getHeaderContentForModalWindows())
             .withCustomRenderer(SvgWrapper.class, new DontHighlightRenderer<>()));
