@@ -1,4 +1,4 @@
-package endtoendtests.database;
+package endtoendtests.othergivens;
 
 import com.googlecode.yatspec.junit.SpecResultListener;
 import com.googlecode.yatspec.junit.SpecRunner;
@@ -12,6 +12,7 @@ import com.googlecode.yatspec.state.givenwhenthen.*;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
+import endtoendtests.database.TestDataProvider;
 import endtoendtests.helper.UnirestRequestWrapper;
 import endtoendtests.helper.UnirestResponseWrapper;
 import org.junit.After;
@@ -22,50 +23,37 @@ import wiring.Application;
 
 import java.util.List;
 import java.util.Random;
-import java.util.StringJoiner;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 
 @SuppressWarnings("SameParameterValue") // For test readability
+/**
+ * Use of composite givens, as part of yatspec api
+ */
 @RunWith(SpecRunner.class)
-public class UsecaseFourWithDatabaseExample1Test extends TestState implements WithCustomResultListeners {
-  // PERSON_ID and PERSON_NAME not hardcoded as these can be different, but shown in interesting givens in output
-  // EXPECTED_RESPONSE_BODY not hardcoded, as can be different depending on primings
+public class UsecaseFourCompositeGivensExample1Test extends TestState implements WithCustomResultListeners {
+
   @Test
   public void shouldReturnResponse() throws Exception {
-    given(theCharacterTableIsPrimedWith(PERSON_ID, andPersonName(PERSON_NAME)));
-    and(theSpecifiesTableIsPrimedWith(speciesName("Ogier"), averageHeight(3.5F), andLifespan(500)));
+    given(theCharacterTableIsPrimed.withPersonId(PERSON_ID).withCharacterName(PERSON_NAME))
+            .and(theSpecifiesTableIsPrimedWith(speciesName("Ogier"), averageHeight(3.5F), andLifespan(500)));
 
     when(weMakeAGetRequest());
 
     then(responseBody(), is(EXPECTED_RESPONSE_BODY));
   }
 
-  private GivensBuilder theCharacterTableIsPrimedWith(Integer personId, String personName) {
-    return interestingGivens -> {
-      Person person = new Person(personId, personName);
-      // Can use a composite data type
-      // problem stems with the individual fields will not be highlighted in output
-      testDataProvider.storeCharacter(person.getPersonId(), person.getPersonName());
-      return interestingGivens.add(person);
-    };
-  }
-
   private GivensBuilder theSpecifiesTableIsPrimedWith(String name, float avgHeight, int lifeSpan) {
-    return interestingGivens -> {
-      testDataProvider.storeSpecifiesInfo(interestingGivens.getType(Person.class).getPersonId(), name, avgHeight, lifeSpan);
-      // Can chain multiple interesting givens
-      return interestingGivens
-              .add("species name", name)
-              .add("average height", avgHeight)
-              .add("lifespan", lifeSpan);
-    };
-  }
-
-  private String andPersonName(String personName) {
-    return personName;
+    interestingGivens
+            .add("species name", name)
+            .add("average height", avgHeight)
+            .add("lifespan", lifeSpan);
+    return new GivenTheSpecifiesTableIsPrimed(testDataProvider)
+            .withSpeciesName(name)
+            .withAverageHeight(avgHeight)
+            .withLifespan(lifeSpan);
   }
 
   private String speciesName(String name) {
@@ -134,33 +122,8 @@ public class UsecaseFourWithDatabaseExample1Test extends TestState implements Wi
   private static final String EXPECTED_RESPONSE_BODY = "Hello, " + PERSON_NAME + ", who lives for 500 years and has average height of 3.5 metres";
 
   private final TestDataProvider testDataProvider = new TestDataProvider();
+  private final TheCharacterTableIsPrimed theCharacterTableIsPrimed = new TheCharacterTableIsPrimed(testDataProvider);
   private final Application application = new Application();
-
-  private static class Person {
-    private final Integer personId;
-    private final String personName;
-
-    public Person(Integer personId, String personName) {
-      this.personId = personId;
-      this.personName = personName;
-    }
-
-    public Integer getPersonId() {
-      return personId;
-    }
-
-    public String getPersonName() {
-      return personName;
-    }
-
-    @Override
-    public String toString() {
-      return new StringJoiner(", ", Person.class.getSimpleName() + "[", "]")
-              .add("personId=" + personId)
-              .add("personName=" + personName)
-              .toString();
-    }
-  }
 }
 
 
