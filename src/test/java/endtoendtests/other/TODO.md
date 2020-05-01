@@ -1,0 +1,2 @@
+- yatspec annotation for no html to speed up build
+- to adjust pom (WIP)
