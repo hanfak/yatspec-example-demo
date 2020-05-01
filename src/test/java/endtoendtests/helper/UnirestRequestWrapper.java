@@ -1,4 +1,4 @@
-package endtoendtests.reqandresponly.capturedinputsandoutputs;
+package endtoendtests.helper;
 
 import com.mashape.unirest.request.HttpRequest;
 

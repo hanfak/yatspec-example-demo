@@ -29,7 +29,10 @@
 - example of using a fluent api (codac)
 - hamcrest using state extractor (X)
 - assertj using state extractor (X)
-- failsafe, artifact locations
+- failsafe, artifact locations (X)
+- table tests
+    - common
+    - custom
 - wiremock and/or jzonbie
 - show wiremock primings
 - Dsl for fluent assertions, whens and givens

@@ -16,6 +16,8 @@ import com.mashape.unirest.http.Headers;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
+import endtoendtests.helper.UnirestRequestWrapper;
+import endtoendtests.helper.UnirestResponseWrapper;
 import org.assertj.core.api.AbstractIntegerAssert;
 import org.hamcrest.Matcher;
 import org.junit.After;
