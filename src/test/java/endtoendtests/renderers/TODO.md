@@ -1,1 +1,3 @@
-- Example of custom renderers
+- Example of custom renderers (X)
+- custom rendere for req and resp from unirest client
+- renderer for displaying a map, keys as the table header, and values as table vvalues in columns

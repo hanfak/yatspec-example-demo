@@ -2,8 +2,7 @@
 - Use givens builder (X)
 - use YatspecTest from clean arch mattia,
     - generic and,with etc
-    - 
-- Use yatspec log, instead of captured inputs and outputs for yatspec output
+- Use yatspec log, instead of captured inputs and outputs for yatspec output (X)
 - Use and assert on captured inputs and outputs
     - app req & resp (X)
     - multiple req & resp (ext and int)
@@ -17,9 +16,9 @@
 - use interesting givens, and get type see   AppointmentReservationLookupResourceReturnsReservationTest - clyde
     - getType form captured inputs andoutputs to assert on, use when with this lambda (X)
     - addToGivens wrappers see AbstractTestCase in clyde (X)
+    - Use givens.gettype, from one given in another given (X)
     - builder pattern see GivenButtersReturnsAddress in clyde
     - compositeGivens see clyde
-    - Use givens.gettype, from one given in another given (X)
 - assert on custom map (x)
 - assert on request and response
     - using fields (X)

@@ -93,7 +93,7 @@ public class UsecaseOneWithStatExtractorsExample3Test extends TestState implemen
   // Unirest does not have a toString representation of the request and response, which we need
   // for the yatspec output and to use for asserting on. This may not apply to you http client library
   // Use of wrapper, to get add the toString impl, also get rid of the formatter for req and resp
-  //
+  // Could use a custom renderer instead of wrapper classes
   private CapturedInputAndOutputs whenWeMakeARequestTo(CapturedInputAndOutputs capturedInputAndOutputs, String path) throws UnirestException {
     HttpRequest getRequest = Unirest.get(HOST + path);
     UnirestRequestWrapper requestWrapper = new UnirestRequestWrapper(getRequest);
