@@ -50,6 +50,7 @@
         <wiremock.version>2.23.2</wiremock.version>
         <jackson.version>2.9.2</jackson.version>
         <fluent.bdd.version>8.2.2</fluent.bdd.version>
+        <system-rules.version>1.18.0</system-rules.version>
     </properties>
 
     <build>
@@ -377,6 +378,19 @@
             <artifactId>core</artifactId>
             <version>${fluent.bdd.version}</version>
             <scope>test</scope>
+        </dependency>
+        <!-- JUnit rules for testing System.out -->
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-rules</artifactId>
+            <version>${system-rules.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit-dep</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Testing Dependencies End -->
         <!-- ************************ -->

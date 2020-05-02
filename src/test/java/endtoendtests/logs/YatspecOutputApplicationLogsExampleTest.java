@@ -1,4 +1,4 @@
-package endtoendtests.database;
+package endtoendtests.logs;
 
 import com.googlecode.yatspec.junit.SpecResultListener;
 import com.googlecode.yatspec.junit.SpecRunner;
@@ -12,6 +12,7 @@ import com.googlecode.yatspec.state.givenwhenthen.*;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
+import endtoendtests.database.TestDataProvider;
 import endtoendtests.helper.UnirestRequestWrapper;
 import endtoendtests.helper.UnirestResponseWrapper;
 import org.junit.After;
@@ -32,9 +33,8 @@ import static org.hamcrest.CoreMatchers.is;
 
 @SuppressWarnings("SameParameterValue") // For test readability
 @RunWith(SpecRunner.class)
-public class UsecaseFourWithDatabaseExample1Test extends TestState implements WithCustomResultListeners {
-  // PERSON_ID and PERSON_NAME not hardcoded as these can be different, but shown in interesting givens in output
-  // EXPECTED_RESPONSE_BODY not hardcoded, as can be different depending on primings
+public class YatspecOutputApplicationLogsExampleTest extends TestState implements WithCustomResultListeners {
+
   @Test
   public void shouldReturnResponse() throws Exception {
     given(theCharacterTableIsPrimedWith(PERSON_ID, andPersonName(PERSON_NAME)));
@@ -48,8 +48,6 @@ public class UsecaseFourWithDatabaseExample1Test extends TestState implements Wi
   private GivensBuilder theCharacterTableIsPrimedWith(Integer personId, String personName) {
     return interestingGivens -> {
       Person person = new Person(personId, personName);
-      // Can use a composite data type
-      // problem stems with the individual fields will not be highlighted in output
       testDataProvider.storeCharacter(person.getPersonId(), person.getPersonName());
       return interestingGivens.add(person);
     };
@@ -58,7 +56,6 @@ public class UsecaseFourWithDatabaseExample1Test extends TestState implements Wi
   private GivensBuilder theSpecifiesTableIsPrimedWith(String name, float avgHeight, int lifeSpan) {
     return interestingGivens -> {
       testDataProvider.storeSpecifiesInfo(interestingGivens.getType(Person.class).getPersonId(), name, avgHeight, lifeSpan);
-      // Can chain multiple interesting givens
       return interestingGivens
               .add("species name", name)
               .add("average height", avgHeight)
@@ -90,15 +87,17 @@ public class UsecaseFourWithDatabaseExample1Test extends TestState implements Wi
   }
 
   public StateExtractor<String> responseBody() {
+    // yatspec log method will store them in CapturedInputAndOutputs, so can grab it assert on it
     return capturedInputAndOutputs -> capturedInputAndOutputs.getType(RESPONSE_FROM_APPLICATION, UnirestResponseWrapper.class).getBody();
   }
 
   private CapturedInputAndOutputs whenWeMakeARequestTo(CapturedInputAndOutputs capturedInputAndOutputs, String path) throws UnirestException {
     HttpRequest getRequest = Unirest.get(HOST + path);
-    UnirestRequestWrapper requestWrapper = new UnirestRequestWrapper(getRequest);
-    capturedInputAndOutputs.add(REQUEST_TO_APPLICATION, requestWrapper);
+    // Instead of storing req & resp in CapturedInputAndOutputs, we store them in fields
+    // so they can be asserted on, but then we can use yatspec log, to show them in the html
+    log(REQUEST_TO_APPLICATION, new UnirestRequestWrapper(getRequest));
     UnirestResponseWrapper response = new UnirestResponseWrapper(getRequest.asString());
-    capturedInputAndOutputs.add(RESPONSE_FROM_APPLICATION, response);
+    log(RESPONSE_FROM_APPLICATION, response);
     return capturedInputAndOutputs;
   }
 
@@ -114,18 +113,19 @@ public class UsecaseFourWithDatabaseExample1Test extends TestState implements Wi
             .generateSequenceDiagram(new ByNamingConventionMessageProducer().messages(capturedInputAndOutputs));
   }
 
+  @Rule
+  public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
+
   @Before
   public void setUp() {
     testDataProvider.deleteAllInfoFromAllTables();
     application.start();
   }
 
-  @Rule
-  public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
-
   @After
   public void tearDown() {
     application.stop();
+    // Needs to be done after app is stopped, to show shut down logs and access logs
     capturedInputAndOutputs.add("Logs", systemOutRule.getLog());
     capturedInputAndOutputs.add("Sequence Diagram", generateSequenceDiagram()); // creates sequence diagram
   }

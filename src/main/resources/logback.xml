@@ -1,5 +1,11 @@
 <configuration>
 
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{ABSOLUTE} %5p [%-50c{4}] - %m%n"/>
+        </Console>
+    </Appenders>
+
     <appender name="APPLICATION" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>[LOG_START] [LOG_TYPE=APP] %date{ISO8601} [%thread] %-5level\(%class{0}: %L\) - %msg %ex{full}[LOG_END]%n</pattern>
@@ -17,6 +23,17 @@
             <pattern>[LOG_START] [LOG_TYPE=ACCESS] %msg [LOG_END]%n</pattern>
         </encoder>
     </appender>
+
+    <!-- SQL execution logging is logged to the LoggerListener logger at DEBUG level -->
+    <!--  Need to change level to debug to see jooq execution logs  -->
+    <Logger name="org.jooq.tools.LoggerListener" level="info">
+        <AppenderRef ref="Console"/>
+    </Logger>
+
+    <!-- Other jOOQ related debug log output -->
+<!--    <Logger name="org.jooq" level="debug">-->
+<!--        <AppenderRef ref="Console"/>-->
+<!--    </Logger>-->
 
     <root level="INFO">
         <appender-ref ref="APPLICATION"/>
