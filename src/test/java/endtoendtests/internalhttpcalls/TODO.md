@@ -10,3 +10,4 @@
     - using wiremock
 - interesting givens 
     - add important parts of response primed in wiremock
+- jzombie instead of wiremock

@@ -27,12 +27,20 @@ public class UnirestResponseWrapper {
     return httpResponse.getHeaders();
   }
 
+  public boolean isSuccessful() {
+    return httpResponse.getStatus() >= 200 && httpResponse.getStatus() < 300;
+  }
+
+  public String headerValue(String key) {
+    return String.join(",", httpResponse.getHeaders().get(key));
+  }
+
   @Override
   public String toString() {
     String formattedHeaders = httpResponse.getHeaders().entrySet().stream()
             .map(s -> format("%s: %s", s.getKey(), String.join(",", s.getValue())))
             .collect(joining(lineSeparator()));
-    return format("%s %s%n%s%n%n%s", "HTTP", httpResponse.getStatus(), formattedHeaders, httpResponse.getBody());
+    return format("%s %s %s%n%s%n%n%s", "HTTP/1.1", httpResponse.getStatus(), httpResponse.getStatusText(), formattedHeaders, httpResponse.getBody());
 
   }
 }

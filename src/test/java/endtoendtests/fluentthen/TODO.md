@@ -1,0 +1,21 @@
+# TODO
+
+- Fluent assertions for 
+    - req and resp
+        - text resp (X)
+        - xml resp (separate matcher) XmlDocumentParser
+        - json resp (separate matcher)
+    - multiple req and resp 
+        - assert on internal request created
+        - use wiremock verify
+    - database 
+    - files 
+    - objects 
+- Assertions 
+    - use assertj returns in Then class, and use assertj methods in test 
+        - AbstractStringAssert
+        - ListAssert<String>
+    - use matcher (X)
+    - AllArgumentsHaveBeenAssertedOn - after each assertion chain is done, check all are matched
+    - regex assetion containsPattern
+- Use angrydev fluent bdd assertions
