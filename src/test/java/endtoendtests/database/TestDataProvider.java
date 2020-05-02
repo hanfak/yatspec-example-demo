@@ -1,11 +1,14 @@
 package endtoendtests.database;
 
 import databaseservice.DatasourceConfig;
+import endtoendtests.helper.CharacterInfo;
 import org.jooq.DSLContext;
+import org.jooq.Record3;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
 import javax.sql.DataSource;
+import java.util.Optional;
 
 import static org.jooq.sources.Tables.CHARACTERINFO;
 import static org.jooq.sources.Tables.CHARACTERS;
@@ -52,4 +55,12 @@ public class TestDataProvider {
     dslContext.deleteFrom(CHARACTERS).execute();
   }
 
+  public CharacterInfo getCharacterInfo(Integer personId) {
+    DSLContext dslContext = DSL.using(dataSource, SQLDialect.POSTGRES);
+    Optional<Record3<Integer, String, String>> result = dslContext.select(CHARACTERINFO.PERSON_ID, CHARACTERINFO.PERSON_NAME, CHARACTERINFO.BIRTH_YEAR)
+            .from(CHARACTERINFO)
+            .where(CHARACTERINFO.PERSON_ID.eq(personId))
+            .fetchOptional();
+    return result.map(record -> new CharacterInfo(record.component1(), record.component2(), record.component3())).orElseThrow(IllegalStateException::new);
+  }
 }

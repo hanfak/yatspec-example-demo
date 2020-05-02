@@ -47,6 +47,7 @@ public class Application {
     servletContextHandler.addServlet(new ServletHolder(new UseCaseTwoServlet(new CharacterDataProvider())), "/usecasetwo");
     servletContextHandler.addServlet(new ServletHolder(new UseCaseThreeServlet(new CharacterDataProvider())), "/usecasethree/*");
     servletContextHandler.addServlet(new ServletHolder(new UseCaseFourServlet(new CharacterDataProvider())), "/usecasefour/*");
+    servletContextHandler.addServlet(new ServletHolder(new UseCaseFiveServlet(new CharacterDataProvider())), "/usecasefive/*");
     servletContextHandler.addServlet(
             new ServletHolder(
                     new UseCaseServlet(

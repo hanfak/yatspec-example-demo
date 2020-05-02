@@ -8,12 +8,12 @@
     - multiple req and resp 
         - assert on internal request created
         - use wiremock verify
-    - database 
+    - database (X)
     - files 
     - objects 
 - Assertions 
     - use assertj returns in Then class, and use assertj methods in test 
-        - AbstractStringAssert
+        - AbstractStringAssert (X)
         - ListAssert<String>
     - use matcher (X)
     - AllArgumentsHaveBeenAssertedOn - after each assertion chain is done, check all are matched
