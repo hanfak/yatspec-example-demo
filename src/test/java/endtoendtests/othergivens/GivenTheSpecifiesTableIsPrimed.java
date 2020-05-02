@@ -3,6 +3,7 @@ package endtoendtests.othergivens;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.InterestingGivens;
 import endtoendtests.database.TestDataProvider;
+import endtoendtests.helper.Person;
 
 public class GivenTheSpecifiesTableIsPrimed implements GivensBuilder {
 

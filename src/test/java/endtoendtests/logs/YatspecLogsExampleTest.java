@@ -13,6 +13,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
 import endtoendtests.database.TestDataProvider;
+import endtoendtests.helper.Person;
 import endtoendtests.helper.UnirestRequestWrapper;
 import endtoendtests.helper.UnirestResponseWrapper;
 import org.junit.After;
@@ -23,7 +24,6 @@ import wiring.Application;
 
 import java.util.List;
 import java.util.Random;
-import java.util.StringJoiner;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -134,32 +134,6 @@ public class YatspecLogsExampleTest extends TestState implements WithCustomResul
 
   private final TestDataProvider testDataProvider = new TestDataProvider();
   private final Application application = new Application();
-
-  private static class Person {
-    private final Integer personId;
-    private final String personName;
-
-    public Person(Integer personId, String personName) {
-      this.personId = personId;
-      this.personName = personName;
-    }
-
-    public Integer getPersonId() {
-      return personId;
-    }
-
-    public String getPersonName() {
-      return personName;
-    }
-
-    @Override
-    public String toString() {
-      return new StringJoiner(", ", Person.class.getSimpleName() + "[", "]")
-              .add("personId=" + personId)
-              .add("personName=" + personName)
-              .toString();
-    }
-  }
 }
 
 

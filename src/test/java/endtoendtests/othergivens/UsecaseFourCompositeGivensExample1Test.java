@@ -13,6 +13,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
 import endtoendtests.database.TestDataProvider;
+import endtoendtests.helper.Person;
 import endtoendtests.helper.UnirestRequestWrapper;
 import endtoendtests.helper.UnirestResponseWrapper;
 import org.junit.After;
