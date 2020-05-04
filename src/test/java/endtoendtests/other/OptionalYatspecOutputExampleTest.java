@@ -115,7 +115,7 @@ public class OptionalYatspecOutputExampleTest extends TestState implements WithC
   @Before
   public void setUp() {
     testDataProvider.deleteAllInfoFromAllTables();
-    application.start();
+    application.start("application/target/classes/application.test.properties");
   }
 
   @After

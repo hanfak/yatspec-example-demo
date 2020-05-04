@@ -1,0 +1,1 @@
+- https://github.com/nickmcdowall/yatspec-example/blob/master/src/test/java/com/googlecode/nickmcdowall/SequenceWithParticipantsExampleTest.java

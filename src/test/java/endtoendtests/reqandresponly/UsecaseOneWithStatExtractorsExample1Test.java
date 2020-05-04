@@ -151,7 +151,7 @@ public class UsecaseOneWithStatExtractorsExample1Test extends TestState implemen
 
   @Before
   public void setUp() {
-    application.start();
+    application.start("application/target/classes/application.test.properties");
   }
 
   @After

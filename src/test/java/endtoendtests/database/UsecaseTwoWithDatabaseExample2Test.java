@@ -100,7 +100,7 @@ public class UsecaseTwoWithDatabaseExample2Test extends TestState implements Wit
   public void setUp() {
     testDataProvider.deleteAllInfoFromAllTables();
     testDataProvider.populateTables();
-    application.start();
+    application.start("application/target/classes/application.test.properties");
   }
 
   @After

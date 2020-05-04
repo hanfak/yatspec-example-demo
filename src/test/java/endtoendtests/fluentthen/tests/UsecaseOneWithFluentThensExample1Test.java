@@ -97,7 +97,7 @@ public class UsecaseOneWithFluentThensExample1Test implements WithTestState, Wit
 
   @Before
   public void setUp() {
-    application.start();
+    application.start("application/target/classes/application.test.properties");
   }
 
   @After

@@ -117,7 +117,7 @@ public class UsecaseFourWithDatabaseExample1Test extends TestState implements Wi
   @Before
   public void setUp() {
     testDataProvider.deleteAllInfoFromAllTables();
-    application.start();
+    application.start("application/target/classes/application.test.properties");
   }
 
   @Rule

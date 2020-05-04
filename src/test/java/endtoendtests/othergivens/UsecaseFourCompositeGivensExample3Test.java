@@ -105,7 +105,7 @@ public class UsecaseFourCompositeGivensExample3Test extends TestState implements
   @Before
   public void setUp() {
     testDataProvider.deleteAllInfoFromAllTables();
-    application.start();
+    application.start("application/target/classes/application.test.properties");
   }
 
   @After

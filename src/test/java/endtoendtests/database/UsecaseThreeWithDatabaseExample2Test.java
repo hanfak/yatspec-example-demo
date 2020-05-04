@@ -111,7 +111,7 @@ public class UsecaseThreeWithDatabaseExample2Test extends TestState implements W
   @Before
   public void setUp() {
     testDataProvider.deleteAllInfoFromAllTables();
-    application.start();
+    application.start("application/target/classes/application.test.properties");
   }
 
   @After

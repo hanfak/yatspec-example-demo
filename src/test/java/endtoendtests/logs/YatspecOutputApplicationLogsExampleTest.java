@@ -119,7 +119,7 @@ public class YatspecOutputApplicationLogsExampleTest extends TestState implement
   @Before
   public void setUp() {
     testDataProvider.deleteAllInfoFromAllTables();
-    application.start();
+    application.start("application/target/classes/application.test.properties");
   }
 
   @After

@@ -114,7 +114,7 @@ public class YatspecLogsExampleTest extends TestState implements WithCustomResul
   @Before
   public void setUp() {
     testDataProvider.deleteAllInfoFromAllTables();
-    application.start();
+    application.start("application/target/classes/application.test.properties");
   }
 
   @After

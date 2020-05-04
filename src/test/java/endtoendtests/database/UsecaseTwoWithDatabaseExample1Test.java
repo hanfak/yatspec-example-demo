@@ -91,7 +91,7 @@ public class UsecaseTwoWithDatabaseExample1Test extends TestState implements Wit
     // Delete data before tests, so we can data after test is run to help with debugging
     testDataProvider.deleteAllInfoFromAllTables();
     testDataProvider.populateTables();
-    application.start();
+    application.start("application/target/classes/application.test.properties");
   }
 
   @After

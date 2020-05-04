@@ -105,7 +105,7 @@ public class UsecaseOneTest extends TestState implements WithCustomResultListene
 
   @Before
   public void setUp() {
-    application.start();
+    application.start("application/target/classes/application.test.properties");
   }
 
   @After

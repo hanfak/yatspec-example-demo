@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.zalando.logbook.DefaultHttpLogWriter;
 import org.zalando.logbook.Logbook;
 import org.zalando.logbook.servlet.LogbookFilter;
+import settings.Settings;
 import starwarsservice.HttpLoggingFormatter;
 import starwarsservice.LoggingHttpClient;
 import starwarsservice.StarWarsService;
@@ -27,43 +28,56 @@ import static javax.servlet.DispatcherType.ERROR;
 import static javax.servlet.DispatcherType.REQUEST;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.zalando.logbook.DefaultHttpLogWriter.Level.INFO;
+import static settings.PropertyLoader.load;
 
 public class Application {
 
   private final static Logger APPLICATION_LOGGER = getLogger(LoggingCategory.APPLICATION.name());
+
   private JettyWebServer jettyWebServer;
 
   public static void main(String... args) {
-    new Application().start();
+    new Application().start("target/classes/application.prod.properties");
   }
-  // TODO tidy up
+
+  // TODO tidy up use wiriing/factories
   // For test to access
-  public void start() {
+  public void start(String propertyFile) {
+    Settings settings = load(propertyFile);
+    CharacterDataProvider characterDataProvider = new CharacterDataProvider();
+    LoggingHttpClient httpClient = new LoggingHttpClient(new UnirestHttpClient(), new HttpLoggingFormatter());
+    StarWarsService starWarsService = new StarWarsService(httpClient, settings);
+    FileService fileService = new FileService(new CounterService(), new XmlMapper());
+    UseCaseServlet useCaseServlet = new UseCaseServlet(starWarsService, characterDataProvider, fileService);
+    UseCaseOneServlet useCaseOneServlet = new UseCaseOneServlet();
+    UseCaseTwoServlet useCaseTwoServlet = new UseCaseTwoServlet(characterDataProvider);
+    UseCaseThreeServlet useCaseThreeServlet = new UseCaseThreeServlet(characterDataProvider);
+    UseCaseFourServlet useCaseFourServlet = new UseCaseFourServlet(characterDataProvider);
+    UseCaseFiveServlet useCaseFiveServlet = new UseCaseFiveServlet(characterDataProvider);
+
+    ServletContextHandler servletContextHandler = createWebserver();
+    addServlets(servletContextHandler, useCaseServlet, useCaseOneServlet, useCaseTwoServlet, useCaseThreeServlet, useCaseFourServlet, useCaseFiveServlet);
+    jettyWebServer.withHandler(servletContextHandler);
+
+    jettyWebServer.startServer();
+  }
+
+  private void addServlets(ServletContextHandler servletContextHandler, UseCaseServlet useCaseServlet, UseCaseOneServlet useCaseOneServlet, UseCaseTwoServlet useCaseTwoServlet, UseCaseThreeServlet useCaseThreeServlet, UseCaseFourServlet useCaseFourServlet, UseCaseFiveServlet useCaseFiveServlet) {
+    servletContextHandler.addServlet(new ServletHolder(useCaseServlet),"/usecase/*");
+    servletContextHandler.addServlet(new ServletHolder(useCaseOneServlet), "/usecaseone");
+    servletContextHandler.addServlet(new ServletHolder(useCaseTwoServlet), "/usecasetwo");
+    servletContextHandler.addServlet(new ServletHolder(useCaseThreeServlet), "/usecasethree/*");
+    servletContextHandler.addServlet(new ServletHolder(useCaseFourServlet),"/usecasefour/*");
+    servletContextHandler.addServlet(new ServletHolder(useCaseFiveServlet), "/usecasefive/*");
+  }
+
+  private ServletContextHandler createWebserver() {
     jettyWebServer = new JettyWebServer(2222, APPLICATION_LOGGER);
     ServletContextHandler servletContextHandler = new ServletContextHandler();
     addLoggingFilter(servletContextHandler);
     jettyWebServer.withRequestLog(createRequestLog());
-    servletContextHandler.addServlet(new ServletHolder(new UseCaseOneServlet()), "/usecaseone");
-    servletContextHandler.addServlet(new ServletHolder(new UseCaseTwoServlet(new CharacterDataProvider())), "/usecasetwo");
-    servletContextHandler.addServlet(new ServletHolder(new UseCaseThreeServlet(new CharacterDataProvider())), "/usecasethree/*");
-    servletContextHandler.addServlet(new ServletHolder(new UseCaseFourServlet(new CharacterDataProvider())), "/usecasefour/*");
-    servletContextHandler.addServlet(new ServletHolder(new UseCaseFiveServlet(new CharacterDataProvider())), "/usecasefive/*");
-    servletContextHandler.addServlet(
-            new ServletHolder(
-                    new UseCaseServlet(
-                            new StarWarsService(
-                                    new LoggingHttpClient(
-                                            new UnirestHttpClient(), new HttpLoggingFormatter())),
-                            new CharacterDataProvider(), new FileService(new CounterService(), new XmlMapper()))),
-            "/usecase/*");
-    jettyWebServer.withHandler(servletContextHandler);
-    jettyWebServer.startServer();
+    return servletContextHandler;
   }
-
-  public void stop() {
-    jettyWebServer.stopServer();
-  }
-
 
   public static void addLoggingFilter(ServletContextHandler servletContextHandler) {
     Logbook logbook = Logbook.builder()
@@ -78,5 +92,10 @@ public class Application {
     slf4jRequestLogWriter.setLoggerName(LoggingCategory.ACCESS.name());
     String requestLogFormat = CustomRequestLog.EXTENDED_NCSA_FORMAT;
     return new CustomRequestLog(slf4jRequestLogWriter, requestLogFormat);
+  }
+
+  // For testing
+  public void stop() {
+    jettyWebServer.stopServer();
   }
 }
