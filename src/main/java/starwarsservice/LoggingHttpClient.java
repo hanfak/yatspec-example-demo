@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static java.lang.String.format;
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class LoggingHttpClient implements HttpClient {
 
   private final static Logger APPLICATION_LOGGER = LoggerFactory.getLogger(LoggingCategory.APPLICATION.name());
+  private final static Logger AUDIT_LOGGER = LoggerFactory.getLogger(LoggingCategory.AUDIT.name());
 
   private final HttpClient delegate;
   private final HttpLoggingFormatter httpLoggingFormatter;
@@ -50,12 +50,12 @@ public class LoggingHttpClient implements HttpClient {
 
   private void logRequest(HttpRequest httpRequest, String requestUrl) throws IOException {
     String formattedRequest = httpLoggingFormatter.requestOutput(httpRequest);
-    APPLICATION_LOGGER.info(format("Request from Application to %s\n%s", requestUrl, formattedRequest));
+    AUDIT_LOGGER.info(format("Request from Application to %s\n%s", requestUrl, formattedRequest));
   }
 
   private void logResponse(String requestUrl, HttpResponse<String> response) {
     String formattedResponse = httpLoggingFormatter.responseOutput(response);
-    APPLICATION_LOGGER.info(format("Response from %s to Application received \n%s", requestUrl, formattedResponse));
+    AUDIT_LOGGER.info(format("Response from %s to Application received \n%s", requestUrl, formattedResponse));
   }
 
   private void logError(HttpRequest httpRequest, String requestUrl, RuntimeException exception) {

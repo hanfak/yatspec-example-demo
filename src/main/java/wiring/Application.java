@@ -54,21 +54,23 @@ public class Application {
     UseCaseThreeServlet useCaseThreeServlet = new UseCaseThreeServlet(characterDataProvider);
     UseCaseFourServlet useCaseFourServlet = new UseCaseFourServlet(characterDataProvider);
     UseCaseFiveServlet useCaseFiveServlet = new UseCaseFiveServlet(characterDataProvider);
+    UseCaseSixServlet useCaseSixServlet = new UseCaseSixServlet(starWarsService, characterDataProvider);
 
     ServletContextHandler servletContextHandler = createWebserver();
-    addServlets(servletContextHandler, useCaseServlet, useCaseOneServlet, useCaseTwoServlet, useCaseThreeServlet, useCaseFourServlet, useCaseFiveServlet);
+    addServlets(servletContextHandler, useCaseServlet, useCaseOneServlet, useCaseTwoServlet, useCaseThreeServlet, useCaseFourServlet, useCaseFiveServlet, useCaseSixServlet);
     jettyWebServer.withHandler(servletContextHandler);
 
     jettyWebServer.startServer();
   }
 
-  private void addServlets(ServletContextHandler servletContextHandler, UseCaseServlet useCaseServlet, UseCaseOneServlet useCaseOneServlet, UseCaseTwoServlet useCaseTwoServlet, UseCaseThreeServlet useCaseThreeServlet, UseCaseFourServlet useCaseFourServlet, UseCaseFiveServlet useCaseFiveServlet) {
-    servletContextHandler.addServlet(new ServletHolder(useCaseServlet),"/usecase/*");
+  private void addServlets(ServletContextHandler servletContextHandler, UseCaseServlet useCaseServlet, UseCaseOneServlet useCaseOneServlet, UseCaseTwoServlet useCaseTwoServlet, UseCaseThreeServlet useCaseThreeServlet, UseCaseFourServlet useCaseFourServlet, UseCaseFiveServlet useCaseFiveServlet, UseCaseSixServlet useCaseSixServlet) {
+    servletContextHandler.addServlet(new ServletHolder(useCaseServlet), "/usecase/*");
     servletContextHandler.addServlet(new ServletHolder(useCaseOneServlet), "/usecaseone");
     servletContextHandler.addServlet(new ServletHolder(useCaseTwoServlet), "/usecasetwo");
     servletContextHandler.addServlet(new ServletHolder(useCaseThreeServlet), "/usecasethree/*");
-    servletContextHandler.addServlet(new ServletHolder(useCaseFourServlet),"/usecasefour/*");
+    servletContextHandler.addServlet(new ServletHolder(useCaseFourServlet), "/usecasefour/*");
     servletContextHandler.addServlet(new ServletHolder(useCaseFiveServlet), "/usecasefive/*");
+    servletContextHandler.addServlet(new ServletHolder(useCaseSixServlet), "/usecasesix/*");
   }
 
   private ServletContextHandler createWebserver() {

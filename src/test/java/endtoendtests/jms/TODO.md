@@ -1,1 +1,3 @@
 - https://github.com/nickmcdowall/yatspec-example/blob/master/src/test/java/com/googlecode/nickmcdowall/SequenceWithParticipantsExampleTest.java
+- stub using an object, which contains capturedinputsandoutputs object, so can test against request
+- Can use a jms test container
