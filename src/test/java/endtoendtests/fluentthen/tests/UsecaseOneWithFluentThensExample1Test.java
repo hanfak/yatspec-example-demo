@@ -24,8 +24,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import wiring.Application;
 
-import static endtoendtests.fluentthen.thens.CapturedInputAndOutputKeys.REQUEST_TO_APPLICATION;
-import static endtoendtests.fluentthen.thens.CapturedInputAndOutputKeys.RESPONSE_FROM_APPLICATION;
+import static endtoendtests.helper.CapturedInputAndOutputKeys.REQUEST_TO_APPLICATION;
+import static endtoendtests.helper.CapturedInputAndOutputKeys.RESPONSE_FROM_APPLICATION;
 import static java.util.Collections.singletonList;
 /**
  * Using a fluent interface for the thens (and when/givens) means less wrapper methods,

@@ -124,8 +124,8 @@ public class UsecaseThreeWithDatabaseExample3Test extends TestState implements W
   private final float AVG_HEIGHT = addToGivens("average height", 3.5F);
   private final int LIFESPAN = addToGivens("lifespan", 500);
   private static final String HOST = "http://localhost:2222";
-  private static final String REQUEST_TO_APPLICATION = "Request from User to Pacman";
-  private static final String RESPONSE_FROM_APPLICATION = "Response from Pacman to User";
+  private static final String REQUEST_TO_APPLICATION = "Request from User to Application";
+  private static final String RESPONSE_FROM_APPLICATION = "Response from Application to User";
   private final TestDataProvider testDataProvider = new TestDataProvider();
   private final Application application = new Application();
 }

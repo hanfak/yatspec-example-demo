@@ -121,8 +121,8 @@ public class UsecaseThreeWithDatabaseExample2Test extends TestState implements W
   }
 
   private static final String HOST = "http://localhost:2222";
-  private static final String REQUEST_TO_APPLICATION = "Request from User to Pacman";
-  private static final String RESPONSE_FROM_APPLICATION = "Response from Pacman to User";
+  private static final String REQUEST_TO_APPLICATION = "Request from User to Application";
+  private static final String RESPONSE_FROM_APPLICATION = "Response from Application to User";
   // this can be any value, we don't know, but it will be used in different places and needs to be stored in interesting givens
   private static final PersonId PERSON_ID = new PersonId(new Random().ints(100, (999)).findFirst().orElse(0));
 

@@ -3,7 +3,7 @@ package endtoendtests.fluentthen.thens;
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import endtoendtests.helper.UnirestResponseWrapper;
 
-import static endtoendtests.fluentthen.thens.CapturedInputAndOutputKeys.RESPONSE_FROM_APPLICATION;
+import static endtoendtests.helper.CapturedInputAndOutputKeys.RESPONSE_FROM_APPLICATION;
 
 public class Then {
   private final TestState interactions;
