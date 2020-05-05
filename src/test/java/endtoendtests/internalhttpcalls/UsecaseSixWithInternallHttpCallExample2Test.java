@@ -1,10 +1,12 @@
 package endtoendtests.internalhttpcalls;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.http.Request;
+import com.github.tomakehurst.wiremock.http.RequestListener;
+import com.github.tomakehurst.wiremock.http.Response;
 import com.googlecode.yatspec.junit.SpecResultListener;
 import com.googlecode.yatspec.junit.SpecRunner;
 import com.googlecode.yatspec.junit.WithCustomResultListeners;
-import com.googlecode.yatspec.plugin.sequencediagram.ByNamingConventionMessageProducer;
 import com.googlecode.yatspec.plugin.sequencediagram.SequenceDiagramGenerator;
 import com.googlecode.yatspec.plugin.sequencediagram.SvgWrapper;
 import com.googlecode.yatspec.rendering.html.DontHighlightRenderer;
@@ -16,6 +18,7 @@ import com.mashape.unirest.request.HttpRequest;
 import endtoendtests.database.TestDataProvider;
 import endtoendtests.helper.UnirestRequestWrapper;
 import endtoendtests.helper.UnirestResponseWrapper;
+import endtoendtests.internalhttpcalls.stub.ByCustomNamingConventionMessageProducer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -30,20 +33,22 @@ import java.util.Random;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static endtoendtests.helper.CapturedInputAndOutputKeys.REQUEST_FROM_APPLICATION_TO_STAR_WARS_SERVICE;
 import static endtoendtests.helper.CapturedInputAndOutputKeys.REQUEST_TO_APPLICATION;
 import static endtoendtests.helper.CapturedInputAndOutputKeys.RESPONSE_FROM_APPLICATION;
+import static endtoendtests.helper.CapturedInputAndOutputKeys.RESPONSE_FROM_STAR_WARS_SERVICE_TO_APPLICATION;
+import static endtoendtests.internalhttpcalls.stub.YatspecFormatters.toYatspecString;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 
 /**
- * An example using wiremock to stub (intercept a http request to a live prod service) to allow to end to end testing
- * http://wiremock.org/docs/
+ *
  */
 @SuppressWarnings("SameParameterValue") // For test readability
 @RunWith(SpecRunner.class)
-public class UsecaseSixWithInternallHttpCallExample1Test extends TestState implements WithCustomResultListeners {
+public class UsecaseSixWithInternallHttpCallExample2Test extends TestState implements WithCustomResultListeners {
 
   @Test
   public void shouldReturnResponse() throws Exception {
@@ -63,9 +68,8 @@ public class UsecaseSixWithInternallHttpCallExample1Test extends TestState imple
   }
 
   private void andTheStarWarsServiceReturnsCharacterInfoContainingBirthYear(String birthYear) {
-    // extracted here so the template is populated, so is fully formed in interesting givens
+    registerListener();
     String primedResponse = format(PRIMED_RESPONSE_FROM_STARWARS_TEMPLATE, PERSON_NAME, birthYear, PERSON_ID);
-    // The path is set here and should match what is set in prod code
     stubGet("/people/" + PERSON_ID,
             addToGivens("Primed Response from Star wars service", primedResponse),
             "application/json");
@@ -110,7 +114,7 @@ public class UsecaseSixWithInternallHttpCallExample1Test extends TestState imple
 
   private SvgWrapper generateSequenceDiagram() {
     return new SequenceDiagramGenerator()
-            .generateSequenceDiagram(new ByNamingConventionMessageProducer().messages(capturedInputAndOutputs));
+            .generateSequenceDiagram(new ByCustomNamingConventionMessageProducer().messages(capturedInputAndOutputs));
   }
 
   private <T> T addToGivens(String key, T t) {
@@ -120,6 +124,23 @@ public class UsecaseSixWithInternallHttpCallExample1Test extends TestState imple
 
   private void stopWiremockServer() {
     wireMockServer.stop();
+  }
+
+  private void recordTraffic(Request request, Response response) {
+    addToCapturedInputsAndOutputs(REQUEST_FROM_APPLICATION_TO_STAR_WARS_SERVICE, toYatspecString(request));
+    addToCapturedInputsAndOutputs(RESPONSE_FROM_STAR_WARS_SERVICE_TO_APPLICATION, toYatspecString(response));
+  }
+
+  public void addToCapturedInputsAndOutputs(String key, Object capturedStuff) {
+    testState().capturedInputAndOutputs.add(key, capturedStuff);
+  }
+
+  protected void registerListener() {
+    listenToWiremock(this::recordTraffic);
+  }
+
+  public void listenToWiremock(RequestListener listener) {
+    wireMockServer.addMockServiceRequestListener(listener);
   }
 
   @Before
@@ -135,7 +156,7 @@ public class UsecaseSixWithInternallHttpCallExample1Test extends TestState imple
   @After
   public void tearDown() {
     application.stop();
-    stopWiremockServer(); // As wiremock is a server, it still needs to be stopped
+    stopWiremockServer();
     capturedInputAndOutputs.add("Logs", systemOutRule.getLog());
     capturedInputAndOutputs.add("Sequence Diagram", generateSequenceDiagram());
   }
@@ -151,9 +172,6 @@ public class UsecaseSixWithInternallHttpCallExample1Test extends TestState imple
   private final WireMockServer wireMockServer = new WireMockServer(8888);
   private final Application application = new Application();
 
-  // As the response from the star wars service is primed, thus a given it should be added to interesting givens
-  // But this is not nice, esp the output, it should be part of the sequence diagrams and the logs for req and resp
-  // Plus the it has not populated
   private static String PRIMED_RESPONSE_FROM_STARWARS_TEMPLATE = "{\n" +
           "  \"name\": \"%s Desilijic Tiure\",\n" +
           "  \"height\": \"175\",\n" +
