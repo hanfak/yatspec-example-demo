@@ -26,6 +26,8 @@ import java.util.EnumSet;
 import static javax.servlet.DispatcherType.ASYNC;
 import static javax.servlet.DispatcherType.ERROR;
 import static javax.servlet.DispatcherType.REQUEST;
+import static logging.LoggingCategory.ACCESS;
+import static org.eclipse.jetty.server.CustomRequestLog.EXTENDED_NCSA_FORMAT;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.zalando.logbook.DefaultHttpLogWriter.Level.INFO;
 import static settings.PropertyLoader.load;
@@ -55,15 +57,16 @@ public class Application {
     UseCaseFourServlet useCaseFourServlet = new UseCaseFourServlet(characterDataProvider);
     UseCaseFiveServlet useCaseFiveServlet = new UseCaseFiveServlet(characterDataProvider);
     UseCaseSixServlet useCaseSixServlet = new UseCaseSixServlet(starWarsService, characterDataProvider);
+    UseCaseSevenServlet useCaseSevenServlet = new UseCaseSevenServlet(starWarsService, characterDataProvider);
 
     ServletContextHandler servletContextHandler = createWebserver();
-    addServlets(servletContextHandler, useCaseServlet, useCaseOneServlet, useCaseTwoServlet, useCaseThreeServlet, useCaseFourServlet, useCaseFiveServlet, useCaseSixServlet);
+    addServlets(servletContextHandler, useCaseServlet, useCaseOneServlet, useCaseTwoServlet, useCaseThreeServlet, useCaseFourServlet, useCaseFiveServlet, useCaseSixServlet, useCaseSevenServlet);
     jettyWebServer.withHandler(servletContextHandler);
 
     jettyWebServer.startServer();
   }
 
-  private void addServlets(ServletContextHandler servletContextHandler, UseCaseServlet useCaseServlet, UseCaseOneServlet useCaseOneServlet, UseCaseTwoServlet useCaseTwoServlet, UseCaseThreeServlet useCaseThreeServlet, UseCaseFourServlet useCaseFourServlet, UseCaseFiveServlet useCaseFiveServlet, UseCaseSixServlet useCaseSixServlet) {
+  private void addServlets(ServletContextHandler servletContextHandler, UseCaseServlet useCaseServlet, UseCaseOneServlet useCaseOneServlet, UseCaseTwoServlet useCaseTwoServlet, UseCaseThreeServlet useCaseThreeServlet, UseCaseFourServlet useCaseFourServlet, UseCaseFiveServlet useCaseFiveServlet, UseCaseSixServlet useCaseSixServlet, UseCaseSevenServlet useCaseSevenServlet) {
     servletContextHandler.addServlet(new ServletHolder(useCaseServlet), "/usecase/*");
     servletContextHandler.addServlet(new ServletHolder(useCaseOneServlet), "/usecaseone");
     servletContextHandler.addServlet(new ServletHolder(useCaseTwoServlet), "/usecasetwo");
@@ -71,13 +74,14 @@ public class Application {
     servletContextHandler.addServlet(new ServletHolder(useCaseFourServlet), "/usecasefour/*");
     servletContextHandler.addServlet(new ServletHolder(useCaseFiveServlet), "/usecasefive/*");
     servletContextHandler.addServlet(new ServletHolder(useCaseSixServlet), "/usecasesix/*");
+    servletContextHandler.addServlet(new ServletHolder(useCaseSevenServlet), "/usecaseseven/*");
   }
 
   private ServletContextHandler createWebserver() {
     jettyWebServer = new JettyWebServer(2222, APPLICATION_LOGGER);
+    jettyWebServer.withRequestLog(createRequestLog());
     ServletContextHandler servletContextHandler = new ServletContextHandler();
     addLoggingFilter(servletContextHandler);
-    jettyWebServer.withRequestLog(createRequestLog());
     return servletContextHandler;
   }
 
@@ -91,9 +95,8 @@ public class Application {
 
   public static CustomRequestLog createRequestLog() {
     Slf4jRequestLogWriter slf4jRequestLogWriter = new Slf4jRequestLogWriter();
-    slf4jRequestLogWriter.setLoggerName(LoggingCategory.ACCESS.name());
-    String requestLogFormat = CustomRequestLog.EXTENDED_NCSA_FORMAT;
-    return new CustomRequestLog(slf4jRequestLogWriter, requestLogFormat);
+    slf4jRequestLogWriter.setLoggerName(ACCESS.name());
+    return new CustomRequestLog(slf4jRequestLogWriter, EXTENDED_NCSA_FORMAT);
   }
 
   // For testing

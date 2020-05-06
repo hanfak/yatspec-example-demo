@@ -1,12 +1,16 @@
 # TODO
 
 - Use of wiremock
-    - use to prime http call
+    - use to prime http call (x)
     - show wiremock primings
     - wiremock use files see nick's examples
 - Sequence diagrams 
     - single call (X)
     - multiple calls
+        - hyd to different services
+            - http://dummy.restapiexample.com/
+            - https://jsonplaceholder.typicode.com/
+        - omar multiple call to same service but diff paths
 - Asserting on request created
     - using captured inputs and outputs
     - using wiremock to verify http://wiremock.org/docs/verifying/
