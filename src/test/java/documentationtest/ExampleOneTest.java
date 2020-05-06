@@ -7,7 +7,8 @@ import domain.Species;
 import fileservice.FileService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import starwarsservice.StarWarsService;
+import thirdparty.starwarsservice.StarWarsService;
+import webserver.StarWarsInterfaceService;
 import webserver.UseCaseServlet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,12 +49,12 @@ public class ExampleOneTest {
   private void andStarWarsServiceReturnsTheCharacterInformation() throws IOException {
     speciesAdd = "www.addd.com";
     yoda = new Person(speciesAdd, "Yoda", "19 BBY");
-    when(starWarsService.getCharacterInfo("22")).thenReturn(yoda); // TODO use argument captor
+    when(starWarsInterfaceService.getCharacterInfo("22")).thenReturn(yoda); // TODO use argument captor
   }
 
   private void andStarWarsServiceReturnsTheSpeciesInformation() throws IOException {
     species = new Species("species", 999, 1.3);
-    when(starWarsService.getSpeciesInfo(speciesAdd)).thenReturn(species);
+    when(starWarsInterfaceService.getSpeciesInfo(speciesAdd)).thenReturn(species);
   }
 
   private void whenTheUsecaseServiceIsCalledWithId(String id) throws IOException {
@@ -87,8 +88,8 @@ public class ExampleOneTest {
   private final HttpServletResponse response = mock(HttpServletResponse.class);
   private final PrintWriter printWriter = mock(PrintWriter.class);
 
-  private final StarWarsService starWarsService = mock(StarWarsService.class);
+  private final StarWarsInterfaceService starWarsInterfaceService = mock(StarWarsService.class);
   private final CharacterDataProvider characterDataProvider = mock(CharacterDataProvider.class);
   private final FileService fileService = mock(FileService.class);
-  private final UseCaseServlet underTest = new UseCaseServlet(starWarsService, characterDataProvider, fileService);
+  private final UseCaseServlet underTest = new UseCaseServlet(starWarsInterfaceService, characterDataProvider, fileService);
 }

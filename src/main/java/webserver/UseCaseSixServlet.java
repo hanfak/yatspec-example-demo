@@ -2,7 +2,6 @@ package webserver;
 
 import databaseservice.DataProvider;
 import domain.Person;
-import starwarsservice.StarWarsService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,11 +12,11 @@ import static java.lang.String.format;
 
 public class UseCaseSixServlet extends HttpServlet {
 
-  private final StarWarsService starWarsService;
+  private final StarWarsInterfaceService starWarsInterfaceService;
   private final DataProvider dataProvider;
 
-  public UseCaseSixServlet(StarWarsService starWarsService, DataProvider dataProvider) {
-    this.starWarsService = starWarsService;
+  public UseCaseSixServlet(StarWarsInterfaceService starWarsInterfaceService, DataProvider dataProvider) {
+    this.starWarsInterfaceService = starWarsInterfaceService;
     this.dataProvider = dataProvider;
   }
 
@@ -27,7 +26,7 @@ public class UseCaseSixServlet extends HttpServlet {
     String personId = String.valueOf(dataProvider.getPersonId(personName));
 
     // Go to third party app get data
-    Person characterInfo = starWarsService.getCharacterInfo(personId);
+    Person characterInfo = starWarsInterfaceService.getCharacterInfo(personId);
 
     response.getWriter().print(format("{\"Description\": \"%s was born on %s\"}",
             characterInfo.getName(), characterInfo.getBirthYear()));

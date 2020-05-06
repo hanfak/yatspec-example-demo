@@ -13,4 +13,8 @@ public class Settings {
   public String starWarsApiAddress() {
     return properties.getPropertyOrDefaultValue("star.wars.character.info.api", "http://swapi.py4e.com/api/");
   }
+
+  public String randomJsonApiAddress() {
+    return properties.getPropertyOrDefaultValue("random.json.api", "http://jsonplaceholder.typicode.com/");
+  }
 }

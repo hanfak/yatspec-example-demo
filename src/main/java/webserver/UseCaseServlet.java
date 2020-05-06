@@ -4,7 +4,6 @@ import databaseservice.DataProvider;
 import domain.Person;
 import domain.Species;
 import fileservice.FileService;
-import starwarsservice.StarWarsService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,12 +14,12 @@ import static java.lang.String.format;
 
 public class UseCaseServlet extends HttpServlet {
 
-  private final StarWarsService starWarsService;
+  private final StarWarsInterfaceService starWarsInterfaceService;
   private final DataProvider dataProvider;
   private final FileService fileService;
 
-  public UseCaseServlet(StarWarsService starWarsService, DataProvider dataProvider, FileService fileService) {
-    this.starWarsService = starWarsService;
+  public UseCaseServlet(StarWarsInterfaceService starWarsInterfaceService, DataProvider dataProvider, FileService fileService) {
+    this.starWarsInterfaceService = starWarsInterfaceService;
     this.dataProvider = dataProvider;
     this.fileService = fileService;
   }
@@ -34,7 +33,7 @@ public class UseCaseServlet extends HttpServlet {
     String personId = String.valueOf(dataProvider.getPersonId(personName));
 
     // Go to third party app get data
-    Person characterInfo = starWarsService.getCharacterInfo(personId);
+    Person characterInfo = starWarsInterfaceService.getCharacterInfo(personId);
 
     // Store characterInfo data in database
     dataProvider.storeCharacterInfo(personId, characterInfo);
@@ -43,7 +42,7 @@ public class UseCaseServlet extends HttpServlet {
     // https://stackoverflow.com/questions/3970567/mock-or-simulate-message-queue-jms
 
     // Go to another third party app to get data
-    Species speciesInfo = starWarsService.getSpeciesInfo(characterInfo.getSpecies());
+    Species speciesInfo = starWarsInterfaceService.getSpeciesInfo(characterInfo.getSpecies());
 
     // Store data in file
     fileService.storeData(personId, characterInfo, speciesInfo);

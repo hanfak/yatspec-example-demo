@@ -1,4 +1,4 @@
-package starwarsservice;
+package httpclient;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -6,6 +6,7 @@ import com.mashape.unirest.request.HttpRequest;
 import logging.LoggingCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import thirdparty.HttpClient;
 
 import java.io.IOException;
 

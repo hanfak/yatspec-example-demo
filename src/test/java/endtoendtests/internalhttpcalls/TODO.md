@@ -4,6 +4,9 @@
     - use to prime http call (x)
     - show wiremock primings
     - wiremock use files see nick's examples
+    - xml response 
+        - DoNotLoadExternalDtdDocumentBuilderFactory
+    - replace sequence diagram generator with rule see hydra AcceptanceTest 265
 - Sequence diagrams 
     - single call (X)
     - multiple calls
@@ -14,6 +17,7 @@
 - Asserting on request created
     - using captured inputs and outputs
     - using wiremock to verify http://wiremock.org/docs/verifying/
+        - WiremockContainer
 - interesting givens 
     - add important parts of response primed in wiremock
 - Format response body depending on the content type

@@ -14,7 +14,8 @@ import fileservice.FileService;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import starwarsservice.StarWarsService;
+import thirdparty.starwarsservice.StarWarsService;
+import webserver.StarWarsInterfaceService;
 import webserver.UseCaseServlet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,7 +58,7 @@ public class ExampleTwoTest implements WithTestState, WithCustomResultListeners 
   private void andStarWarsServiceReturnsTheCharacterInformation() throws IOException {
     speciesAdd = "www.addd.com";
     yoda = new Person(speciesAdd, "Yoda", "19 BBY");
-    when(starWarsService.getCharacterInfo("22")).thenReturn(yoda); // TODO use argument captor
+    when(starWarsInterfaceService.getCharacterInfo("22")).thenReturn(yoda); // TODO use argument captor
     addToGivens("species info address", speciesAdd);
     log("Response from star wars service for Character Info", yoda);
   }
@@ -66,7 +67,7 @@ public class ExampleTwoTest implements WithTestState, WithCustomResultListeners 
     double averageHeight = 1.3;
     int lifeSpan = 999;
     species = new Species("species", lifeSpan, averageHeight);
-    when(starWarsService.getSpeciesInfo(speciesAdd)).thenReturn(species);
+    when(starWarsInterfaceService.getSpeciesInfo(speciesAdd)).thenReturn(species);
     addToGivens("species info life span", lifeSpan);
     addToGivens("species info average height", averageHeight);
     log("Response from star wars service for Species Info", yoda);
@@ -106,10 +107,10 @@ public class ExampleTwoTest implements WithTestState, WithCustomResultListeners 
   private final HttpServletResponse response = mock(HttpServletResponse.class);
   private final PrintWriter printWriter = mock(PrintWriter.class);
 
-  private final StarWarsService starWarsService = mock(StarWarsService.class);
+  private final StarWarsInterfaceService starWarsInterfaceService = mock(StarWarsService.class);
   private final CharacterDataProvider characterDataProvider = mock(CharacterDataProvider.class);
   private final FileService fileService = mock(FileService.class);
-  private final UseCaseServlet underTest = new UseCaseServlet(starWarsService, characterDataProvider, fileService);
+  private final UseCaseServlet underTest = new UseCaseServlet(starWarsInterfaceService, characterDataProvider, fileService);
 
   // Using yatspec methods in documentation test to display useful stuff in html
   // can be extracted to parent class

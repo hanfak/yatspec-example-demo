@@ -4,6 +4,9 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import databaseservice.CharacterDataProvider;
 import fileservice.CounterService;
 import fileservice.FileService;
+import httpclient.HttpLoggingFormatter;
+import httpclient.LoggingHttpClient;
+import httpclient.UnirestHttpClient;
 import logging.LoggingCategory;
 import org.eclipse.jetty.server.CustomRequestLog;
 import org.eclipse.jetty.server.Slf4jRequestLogWriter;
@@ -15,10 +18,7 @@ import org.zalando.logbook.DefaultHttpLogWriter;
 import org.zalando.logbook.Logbook;
 import org.zalando.logbook.servlet.LogbookFilter;
 import settings.Settings;
-import starwarsservice.HttpLoggingFormatter;
-import starwarsservice.LoggingHttpClient;
-import starwarsservice.StarWarsService;
-import starwarsservice.UnirestHttpClient;
+import thirdparty.starwarsservice.StarWarsService;
 import webserver.*;
 
 import java.util.EnumSet;
@@ -48,25 +48,26 @@ public class Application {
     Settings settings = load(propertyFile);
     CharacterDataProvider characterDataProvider = new CharacterDataProvider();
     LoggingHttpClient httpClient = new LoggingHttpClient(new UnirestHttpClient(), new HttpLoggingFormatter());
-    StarWarsService starWarsService = new StarWarsService(httpClient, settings);
+    StarWarsInterfaceService starWarsInterfaceService = new StarWarsService(httpClient, settings);
     FileService fileService = new FileService(new CounterService(), new XmlMapper());
-    UseCaseServlet useCaseServlet = new UseCaseServlet(starWarsService, characterDataProvider, fileService);
+    UseCaseServlet useCaseServlet = new UseCaseServlet(starWarsInterfaceService, characterDataProvider, fileService);
     UseCaseOneServlet useCaseOneServlet = new UseCaseOneServlet();
     UseCaseTwoServlet useCaseTwoServlet = new UseCaseTwoServlet(characterDataProvider);
     UseCaseThreeServlet useCaseThreeServlet = new UseCaseThreeServlet(characterDataProvider);
     UseCaseFourServlet useCaseFourServlet = new UseCaseFourServlet(characterDataProvider);
     UseCaseFiveServlet useCaseFiveServlet = new UseCaseFiveServlet(characterDataProvider);
-    UseCaseSixServlet useCaseSixServlet = new UseCaseSixServlet(starWarsService, characterDataProvider);
-    UseCaseSevenServlet useCaseSevenServlet = new UseCaseSevenServlet(starWarsService, characterDataProvider);
+    UseCaseSixServlet useCaseSixServlet = new UseCaseSixServlet(starWarsInterfaceService, characterDataProvider);
+    UseCaseSevenServlet useCaseSevenServlet = new UseCaseSevenServlet(starWarsInterfaceService, characterDataProvider);
+    UseCaseEightServlet useCaseEightServlet = new UseCaseEightServlet(starWarsInterfaceService, characterDataProvider);
 
     ServletContextHandler servletContextHandler = createWebserver();
-    addServlets(servletContextHandler, useCaseServlet, useCaseOneServlet, useCaseTwoServlet, useCaseThreeServlet, useCaseFourServlet, useCaseFiveServlet, useCaseSixServlet, useCaseSevenServlet);
+    addServlets(servletContextHandler, useCaseServlet, useCaseOneServlet, useCaseTwoServlet, useCaseThreeServlet, useCaseFourServlet, useCaseFiveServlet, useCaseSixServlet, useCaseSevenServlet, useCaseEightServlet);
     jettyWebServer.withHandler(servletContextHandler);
 
     jettyWebServer.startServer();
   }
 
-  private void addServlets(ServletContextHandler servletContextHandler, UseCaseServlet useCaseServlet, UseCaseOneServlet useCaseOneServlet, UseCaseTwoServlet useCaseTwoServlet, UseCaseThreeServlet useCaseThreeServlet, UseCaseFourServlet useCaseFourServlet, UseCaseFiveServlet useCaseFiveServlet, UseCaseSixServlet useCaseSixServlet, UseCaseSevenServlet useCaseSevenServlet) {
+  private void addServlets(ServletContextHandler servletContextHandler, UseCaseServlet useCaseServlet, UseCaseOneServlet useCaseOneServlet, UseCaseTwoServlet useCaseTwoServlet, UseCaseThreeServlet useCaseThreeServlet, UseCaseFourServlet useCaseFourServlet, UseCaseFiveServlet useCaseFiveServlet, UseCaseSixServlet useCaseSixServlet, UseCaseSevenServlet useCaseSevenServlet, UseCaseEightServlet useCaseEightServlet) {
     servletContextHandler.addServlet(new ServletHolder(useCaseServlet), "/usecase/*");
     servletContextHandler.addServlet(new ServletHolder(useCaseOneServlet), "/usecaseone");
     servletContextHandler.addServlet(new ServletHolder(useCaseTwoServlet), "/usecasetwo");
@@ -75,6 +76,7 @@ public class Application {
     servletContextHandler.addServlet(new ServletHolder(useCaseFiveServlet), "/usecasefive/*");
     servletContextHandler.addServlet(new ServletHolder(useCaseSixServlet), "/usecasesix/*");
     servletContextHandler.addServlet(new ServletHolder(useCaseSevenServlet), "/usecaseseven/*");
+    servletContextHandler.addServlet(new ServletHolder(useCaseEightServlet), "/usecaseeight/*");
   }
 
   private ServletContextHandler createWebserver() {

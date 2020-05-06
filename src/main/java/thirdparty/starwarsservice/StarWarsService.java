@@ -1,4 +1,4 @@
-package starwarsservice;
+package thirdparty.starwarsservice;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -10,10 +10,12 @@ import logging.LoggingCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import settings.Settings;
+import thirdparty.HttpClient;
+import webserver.StarWarsInterfaceService;
 
 import java.io.IOException;
 
-public class StarWarsService {
+public class StarWarsService implements StarWarsInterfaceService {
 
   private final static Logger APPLICATION_LOGGER = LoggerFactory.getLogger(LoggingCategory.APPLICATION.name());
 
@@ -25,6 +27,7 @@ public class StarWarsService {
     this.settings = settings;
   }
 
+  @Override
   public Person getCharacterInfo(String id) throws IOException {
     try {
       String apiAddress = settings.starWarsApiAddress();
@@ -42,6 +45,7 @@ public class StarWarsService {
     }
   }
 
+  @Override
   public Species getSpeciesInfo(String url) throws IOException {
     try {
       HttpResponse<String> response = httpClient.submitGetRequest(url);

@@ -1,4 +1,4 @@
-package starwarsservice;
+package httpclient;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.request.HttpRequest;
